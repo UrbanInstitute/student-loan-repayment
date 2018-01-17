@@ -1,4 +1,5 @@
 var PREV_BALANCE;
+var PREV_DATA = {}
 
 function getGlobals(){
 	var globals = {}
@@ -50,26 +51,92 @@ function getNPV(agi, year, opts){
 	if(minAnnualPayment > inc){
 		incPay = minAnnualPayment;
 	}else{
-		if(opts.standardRepayment < inc && opts.capAtStandardRepayment == true){
+		if(opts.standardRepayment < inc){
 			incPay = opts.standardRepayment
 		}else{
 			incPay = inc;
 		}
 	}
-	var prevBalance = (year == 0) ? loanAmount : PREV_BALANCE;
+	var prevBalance = (year == 0) ? loanAmount : PREV_DATA[agi]["balance"][year - 1];
 	var balance = prevBalance * (1+(opts.interestRate)) - incPay
 
-	PREV_BALANCE = balance;
+	// PREV_BALANCE = balance;
+
+//  k = incpay
+//  m = yrpayment
+// IF((SUM($K$3:K12)>=$S$10 && SUM($M$3:M11)<$S$10){
+// 	,$S$10-SUM($M$3:M11),
+// }
+// else{
+// 	IF((SUM($K$3:K11)>=$S$10 && SUM($M$3:M11)>=$S$10){
+// 		0
+// 	}
+// 	else{
+// 		K12
+// 	}
+// }
 
 	var yearlyPayment, yearlyUnbounded;
-	yearlyUnbounded = (balance > 0) ? incPay : incPay + balance;
-	yearlyPayment = (yearlyUnbounded < 0) ? 0 : yearlyUnbounded;
+	if(opts.capAtStandardRepayment && year != 0){
+	// if(false){
+		var sumInc = incPay;
+		for(var i = 0; i < year; i++){
+		// 	console.log(i, year)
+			sumInc += PREV_DATA[agi]["incPay"][i]
+		}
+		var sumPay = 0;
+		for(var i = 0; i < year; i++){
+		// 	console.log(i, year)
+			sumPay += PREV_DATA[agi]["yearlyPayment"][i]
+		}
+
+		var totalRepayment = opts.standardRepayment*opts.standardYears
+		if(sumInc >= totalRepayment && sumPay < totalRepayment){
+			yearlyPayment = totalRepayment - sumPay
+		}else{
+			if(sumInc >= totalRepayment && sumPay >= totalRepayment){
+				yearlyPayment = 0
+			}else{
+				yearlyPayment = incPay
+			}
+		}
+
+		// console.log(sumInc)
+	}else{
+		yearlyUnbounded = (balance > 0) ? incPay : incPay + balance;
+		yearlyPayment = (yearlyUnbounded < 0) ? 0 : yearlyUnbounded;
+	}
+
 
 	var NPV = yearlyPayment / Math.pow(1+opts.discountRate, year+1)
-	
-	return NPV;
+
+	if(PREV_DATA.hasOwnProperty(agi)){
+		var el = PREV_DATA[agi]
+		el.NPV.push(NPV)
+		el.balance.push(balance)
+		el.incPay.push(incPay)
+		el.yearlyPayment.push(yearlyPayment)
+	}else{
+		PREV_DATA[agi] = {}
+		var el = PREV_DATA[agi]
+		el.NPV = [NPV]
+		el.balance = [balance]
+		el.incPay = [incPay]
+		el.yearlyPayment = [yearlyPayment]
+	}
+	// console.log(PREV_DATA)
+	return [NPV, balance, incPay, yearlyPayment];
+
 }
 
+function PV(discountRate, years, standardRepayment){
+	//Excel PV function found here https://support.office.com/en-us/article/PV-function-23879d31-0e02-4321-be01-da16e8168cbd
+	//pv * (1+rate)^nper + pmt(1 + rate*type)* ( (1+rate)^nper -1  )/rate +fv = 0
+	//fv = 0, type = 0 (payments due at end of period)
+	var n = Math.pow(1 + discountRate, years)
+	return (-1*standardRepayment* ((n - 1)/discountRate))/n
+
+}
 function getYearsToRepay(agi){
 	var globals = getGlobals();
 	var inputs = getInputs();
@@ -78,18 +145,20 @@ function getYearsToRepay(agi){
 	var standardRepayment = getStandardRepayment(opts)
 
 	opts["standardRepayment"] = standardRepayment
-	opts["totalStandardRepayment"] = standardRepayment * opts.standardYears;
+	opts["totalStandardRepayment"] = -PV(opts.discountRate, opts.standardYears, standardRepayment);
 	
-	var totalNPV = 0;
 
 	for(var i = 0; i < opts.forgivenessPeriod; i++){
-		var npv = getNPV(agi, i, opts)
-		if(npv <= .1){
+		var npv = getNPV(agi, i, opts)[0]
+		var balance = getNPV(agi, i, opts)[1]
+		// console.log(npv, i)
+		if(npv <= .1 && balance <= .1){
+			// console.log(i, npv)
+			// console.log(npv, i)
 			return i;
 		}
 	}
-	return opts.forgivenessPeriod
-	
+	return opts.forgivenessPeriod	
 }
 
 function getTotalRepayment(agi){
@@ -100,12 +169,12 @@ function getTotalRepayment(agi){
 	var standardRepayment = getStandardRepayment(opts)
 
 	opts["standardRepayment"] = standardRepayment
-	opts["totalStandardRepayment"] = standardRepayment * opts.standardYears;
+	opts["totalStandardRepayment"] = -PV(opts.discountRate, opts.standardYears, standardRepayment);
 	
 	var totalNPV = 0;
 
 	for(var i = 0; i < opts.forgivenessPeriod; i++){
-		totalNPV += getNPV(agi, i, opts)
+		totalNPV += getNPV(agi, i, opts)[0]
 	}
 	return totalNPV
 	
@@ -117,7 +186,8 @@ function buildRepaymentData(callback){
 	var inputs = getInputs();
 
 	var opts = $.extend(globals, inputs);
-	var totalStandardRepayment = getStandardRepayment(opts) * opts.standardYears
+	var standardRepayment = getStandardRepayment(opts)
+	var totalStandardRepayment = -PV(opts.discountRate, opts.standardYears, standardRepayment);
 
 	for(var agi = 5000; agi <= 120000; agi += 500){
 		datum = {"agi": agi, "totalStandardRepayment": totalStandardRepayment, "npv": getTotalRepayment(agi)}
@@ -407,6 +477,7 @@ function updateCharts(){
 
 
 d3.selectAll("#percentDiscretionaryAGI").on("input", function(){
+	PREV_DATA = {}
 	var formatter = d3.format(".1%")
 	var val = $(this).val()
 	$(this.parentNode).find(".valLabel").text(formatter(val))
@@ -414,24 +485,28 @@ d3.selectAll("#percentDiscretionaryAGI").on("input", function(){
 })
 
 d3.selectAll("#forgivenessPeriod").on("input", function(){
+	PREV_DATA = {}
 	var formatter = d3.format(".0f")
 	var val = $(this).val()
 	$(this.parentNode).find(".valLabel").text(formatter(val))
 	updateCharts()
 })
 d3.selectAll("#minPayment").on("input", function(){
+	PREV_DATA = {}
 	var formatter = d3.format("$.0f")
 	var val = $(this).val()
 	$(this.parentNode).find(".valLabel").text(formatter(val))
 	updateCharts()
 })
 d3.selectAll("#loanAmount").on("input", function(){
+	PREV_DATA = {}
 	var formatter = d3.format("$,.0f")
 	var val = $(this).val()
 	$(this.parentNode).find(".valLabel").text(formatter(val))
 	updateCharts()
 })
 d3.selectAll("#capAtStandardRepayment").on("change", function(){
+	PREV_DATA = {}
 	updateCharts()	
 })
 buildCharts()
