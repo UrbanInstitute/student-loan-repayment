@@ -1,61 +1,282 @@
+<!DOCTYPE html>
 <html>
 <head>
-<style>
-body{
-	font-family: Lato;
-}
-.controlContainer{
-	display: inline-block;
-    width: 210px;
-    height: 102px;
-    float: left;
-    clear: right;
-}
-#repaymentChart, #yearsChart{
-	float: left;
-}
-#repaymentChart{
-	clear: left;
-}
-</style>
+  <title>Title of feature</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" type="text/css" href="css/urban.css"/>
+  <link rel="stylesheet" type="text/css" href="css/main.css"/>
+  <link rel="stylesheet" type="text/css" href="css/urban-header.css"/>
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic,900" rel="stylesheet" type="text/css">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@urbaninstitute">
+  <meta name="twitter:creator" content="@urbaninstitute">
+  <meta name="twitter:title" content="How do school funding formulas work?">
+  <meta name="twitter:description" content="In public school funding, both the state's formula and the districts' behavior matter.">
+  <meta name="twitter:image" content="https://apps.urban.org/features/funding-formulas/images/social.jpg">
+  <meta property="og:title" content="How do school funding formulas work?" />
+  <meta property="og:description" content="In public school funding, both the state's formula and the districts' behavior matter." />
+  <meta property="og:image" content="https://apps.urban.org/features/funding-formulas/images/social.jpg" />
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:url" content="http://urbn.is/fundingformulas">
+
+
+  <script type="application/ld+json">
+  {
+          "@context": "http://schema.org",
+          "@type": "NewsArticle",
+          "headline": "How do school funding formulas work?",
+          "url": "https://apps.urban.org/features/funding-formulas/",
+          "thumbnailUrl": "https://apps.urban.org/features/funding-formulas/images/social.jpg",
+          "dateCreated": "2017-11-29T05:00:00.000Z",
+          "articleSection": "Interactive Feature",
+          "creator": ["Matthew Chingos","Kristin Blagg","Alexandra Tilsley","Benjamin Chartoff","Christina Baird","Elizabeth Forney"],
+          "keywords": ["Education and Training"]
+  }
+  </script>
 </head>
 <body>
-	<div class = "controlContainer">
-		<div class = "label">Percent discretionary AGI</div>
-		<input id = "percentDiscretionaryAGI" class = "controlSlider" type="range" min="0" max="1" step="0.001" value =".1">
-		<div class = "valLabel">10%</div>
+<!-- Google Tag Manager -->
+<!-- <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-MKBD2W"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MKBD2W');</script> -->
+<!-- End Google Tag Manager -->
+
+<div id = "isMobile"></div>
+<div id = "isPhone"></div>
+
+
+<!-- START HEADER -->
+<div id="header-pinned" class="no-touch">
+   <a target="_blank" href="http://www.urban.org" title="Home" rel="home" class="site-logo"></a>
+<div class="title"><span class="feature-link"><a href="http://www.urban.org/features" class="title-linkback" alt="Urban Institute logo">Features</a></div>
+<div class="share-icons">
+    <div class="shareThisP">
+        <span onclick="toggle_visibility('shareBox');">
+                <div class="shareThisB"></div>
+            </span>
+        <div class="shareThisW" id="shareBox">
+
+            <div class="addthis_toolbox addthis_default_style  "addthis:title="" addthis:url="">
+                <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A//urbn.is/fundingformulas" target="_blank" class="addthis_button_facebook at300b" title="Facebook" onclick="toggle_visibility('shareBox');"><span class="at4-icon aticon-facebook" style="background-color: rgb(48, 88, 145);"><span class="at_a11y">Share on facebook</span></span></a>
+
+                <a href="http://twitter.com/intent/tweet?text=How%20do%20states%20use%20formulas%20to%20distribute%20school%20funding%20to%20students%20who%20need%20it%20most%3F%20http%3A%2F%2Furbn.is%2Ffundingformulas%20(via%20%40urbaninstitute)" target="_blank" class="addthis_button_twitter at300b" title="Tweet" onclick="toggle_visibility('shareBox');"><span class="at4-icon aticon-twitter" style="background-color: rgb(44, 168, 210);"><span class="at_a11y">Share on twitter</span></span></a>
+
+                <a href="mailto:%20?Subject=New interactive from the Urban Institute &amp;Body=Hi! I thought you'd be interested in this new interactive from the Urban Institute: “How do school funding formulas work?” http://urbn.is/fundingformulas" target="_blank" class="addthis_button_email at300b" target="_blank" title="Email" onclick="toggle_visibility('shareBox');"><span class="at4-icon aticon-email" style="background-color: rgb(115, 138, 141);"><span class="at_a11y">Share on email</span></span></a>
+                <div class="atclear"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+<div class="headerimage" id="heroimage">
+  <div class="wrapper headerwrapper">
+    <!-- <h1 class="div-title-block">School Funding: Do Poor Kids Get Their Fair Share?</h1> -->
+  </div>
+</div>
+<!-- END HEADER -->
+
+
+<div class="container">
+  <div id='graphic'>
+    <div id = "topText">
+<div id = "topTitle">Title of feature</div>
+        <div id = "topHR"></div> 
+        <div class = "pubDate">November 29, 2017</div>
+        <p>
+		To help make student loan repayment affordable, the Department of Education offers several  repayment plans that adjust monthly payments based on the borrower’s income. These plans require that borrowers pay a portion of their discretionary income (earnings above 150 percent of the poverty level) for a given period of years, after which the remainder of the loan is forgiven. 
+		</p>
+		<p>
+		As Congress faces the task of reauthorizing the Higher Education Act, proposals—from both legislators and advocates—to change these income-driven repayment plans abound. The House’s PROSPER Act, introduced late last year, suggested one new version of income-driven repayment, and it’s likely the Senate will suggest another. 
+		</p>
+		<p>
+		The parameters of the repayment plan — the percentage of income paid, the period of repayment, and requirements for minimum or maximum payments — can substantially affect how much borrowers ultimately pay toward their loans. This calculator shows how these parameters affect the amount borrowers will pay (in present dollars) as well as how long it will take to pay off the loan.
+		</p>
+		<p>
+		The buttons in the calculator allow the modeling of four different repayment scenarios for a single borrower with no children. 
+		</p>
+		<p>
+		The Revised Pay As You Earn (REPAYE) plan for undergraduates permits borrowers to pay 10 percent of their discretionary income, with the remainder of the loan forgiven after 20 years. Borrowers who make less than 150 percent of the poverty threshold pay nothing ($0) on their loans. Because the loans continue to accrue daily interest, it is possible that some borrowers will pay more than they would have under a standard 10-year plan. Dependent undergraduate students can borrow a maximum of $31,000 in federal student loans. 
+		</p>
+		<p>
+		REPAYE for graduate student permits borrowers to pay 10 percent of their discretionary income, with the remainder of the loan forgiven after 25 years. Borrowers who make less than 150 percent of the poverty threshold pay nothing ($0) on their loans. Because the loans continue to accrue daily interest, it is possible that some borrowers will pay more than they would have under a standard 10-year plan. Graduate students can borrow a maximum of $138,500 in federal student loans.
+		Under the Public Service Loan Forgiveness program (PSLF), borrowers on an income-driven repayment plan such as REPAYE who work in a non-profit or public sector job for 10 years are eligible for student loan forgiveness. This benefit is available to those with either undergraduate and graduate student loans.
+		</p>
+		<p>
+		The House’s PROSPER plan would require that students pay 15 percent of their discretionary income. Borrowers would have to make a minimum payment of $25 dollars (which may be reduced to $5 due to severe economic hardship). Borrowers do not get loan forgiveness, but their payments end when they have paid what they would have owed under a standard 10-year plan, meaning that borrowers do not pay for additional accrued interest. However, the lack of a loan forgiveness period means that some borrowers might be paying off their loans for the entirety of their careers.
+		</p>
+		<p>
+		While we’ve outlined four income-driven repayment plans, this tool allows for the modeling of many different scenarios. Users can change the percent of discretionary income, the forgiveness period, the minimum monthly payment, and whether the payments are capped at what the borrower would have paid under a ten-year plan. By adjusting the loan amount, users can see what would be repaid (and for how long) for borrowers at different starting income levels.
+		</p>
+		<div id = "clickToExpand" class = "closed">CLICK TO EXPAND PLACEHOLDER</div>
+		<svg id = "gradientHolder"></svg>
+        </div>
+
+    <div id = "controls">
+    	<div id = "controlsLeft">
+			<div class = "controlContainer percentDiscretionaryAGI">
+				<div class = "label">Percent discretionary AGI</div>
+				<input id = "percentDiscretionaryAGI" class = "controlSlider" type="range" min="0" max="1" step="0.01" value =".1">
+				<!-- <div class = "valLabel">10%</div> -->
+				<input type = "number" class = "valLabel" value ="10" min ="0" max="100"><span class = "suffix">%</span>
+			</div>
+
+			<div class = "controlContainer minPayment">
+				<div class = "label">Minimum payment</div>
+				<input id = "minPayment" class = "controlSlider" type="range" min="0" max="100" step="1" value ="25">
+				<span class = "prefix">$</span><input type = "number" class = "valLabel" value ="25" min ="0" max="100">
+			</div>
+		</div>
+
+		<div id = "controlsRight">
+			<div class = "controlContainer forgivenessPeriod">
+				<div class = "label">Forgiveness period</div>
+				<input id = "forgivenessPeriod" class = "controlSlider" type="range" min="0" max="50" step="1" value ="25">
+				<input id = "forgivenessPeriodLabel" type = "number" class = "valLabel" value = "25" min = "0" max = "50"><span class = "suffix">years</span>
+				<div id = "noForgiveness">No forgiveness period</div>
+			</div>
+			<div class = "controlContainer capAtStandardRepayment">
+		    	<input type="checkbox" id="capAtStandardRepayment" value="cap">
+				<label for="capAtStandardRepayment"></label><div id = "capLabel">Forgive after matching standard 10 year plan</div>
+			</div>
+		</div>
 	</div>
 
-	<div class = "controlContainer">
-		<div class = "label">Forgiveness period</div>
-		<input id = "forgivenessPeriod" class = "controlSlider" type="range" min="0" max="200" step="1" value ="25">
-		<div class = "valLabel">25</div>
+
+	<div id = "repaymentChart">
+		<div id = "repaymentTitle" class = "chartTitle">
+			<div id = "repaymentTitleLeft">Total amount paid on a loan of</div>
+			<div class = "valLabel">$100,000</div>
+			<input class = "triangle" id = "loanAmount" class = "controlSlider" type="range" min="5000" max="150000" step="500" value ="100000">
+			<div id = "repaymentTitleRight">, by income</div>
+		</div>
+	</div>
+	<div id = "yearsChart">
+		<div id = "yearsTitle" class = "chartTitle">
+			<div id = "yearsTitleLeft">Years to repay a loan of</div>
+			<div class = "valLabel">$100,000</div>
+			<input class = "triangle" id = "loanAmount2" class = "controlSlider" type="range" min="5000" max="150000" step="500" value ="100000">
+			<div id = "yearsTitleRight">, by income</div>
+		</div>
 	</div>
 
-	<div class = "controlContainer">
-		<div class = "label">Minimum payment</div>
-		<input id = "minPayment" class = "controlSlider" type="range" min="0" max="100" step="1" value ="25">
-		<div class = "valLabel">$25</div>
-	</div>
-
-	<div class = "controlContainer">
-		<div class = "label">Loan Amount</div>
-		<input id = "loanAmount" class = "controlSlider" type="range" min="5000" max="150000" step="500" value ="100000">
-		<div class = "valLabel">$100,000</div>
-	</div>
-
-	<div class = "controlContainer">
-	    <input type="checkbox" id="capAtStandardRepayment" value="cap" checked>
-		<label for="cap">Cap payment at 10 year standard plan</label>
-	</div>
+	<div id = "downloadData"><a>Download data</a></div>
+</div>
+</div>
 
 
-	<div id = "repaymentChart"></div>
-	<div id = "yearsChart"></div>
+
+
+    <footer>
+    
+     <div class="content">     
+
+<!--                 <div id="left">
+                    <h4>About the data</h4>
+                      <a href = "data/download/state-education-data.xlsx">
+                        <div class = "footerButton downloadButton">Download data</div>
+                      </a>
+                      <a href = "http://www.urban.org/research/publication/do-poor-kids-get-their-fair-share-school-funding" target = "_blank">
+                        <div class = "footerButton researchButton">Read the research</div>
+                      </a>
+                    <p class = "footerTopP">
+                      We measured the progressivity of school funding as the difference between two weighted averages of each district&rsquo;s per-student revenue: (1) weights are the number of poor students; and (2) weights are the number of nonpoor students. For example, an estimate of $100 would imply that, on average, poor students attend districts that receive $100 more in per-student funding than the districts nonpoor students attend.
+                    </p>
+                    <p>
+                      We calculated our measure for nearly all regular US school districts using data on federal, state, and local revenues from the US Department of Education&rsquo;s Common Core of Data Local Education Agency Finance Survey (F-33). We merged the finance data with district-level poverty data from the Census Bureau&rsquo;s Model-based Small Area Income and Poverty Estimates.  We adjusted districts&rsquo; funding amounts for differences in the costs they face using a measure of the salaries of college graduates who are not teachers in the district&rsquo;s labor market.
+                    </p>
+                    <p>
+                      The details of the data and methodology are provided <a href = "http://www.urban.org/research/publication/do-poor-kids-get-their-fair-share-school-funding" target = "_blank">in the brief</a>.
+                    </p>
+                    <div id = "mobile-notes">
+                      <h3 id = "mobile-notes-header" class = "job">Notes on figures</h3>
+                      <div id = "mobile-notes-text-dots"><strong>State, local and federal funding charts:</strong> We exclude Hawaii and Washington, DC, because they are both single districts. Data are from 2013–14.</div>
+                      <div id = "mobile-notes-text-maps"><strong>Tract and district maps:</strong> Poverty rates among families with children ages 5–17. Data are from 2013–14.</div>
+                    </div>
+
+                </div> -->
+                <div id="right">
+                    <h4>Learn More</h4>
+                    <a href = "https://www.urban.org/research/publication/making-sense-state-school-funding-policy" target = "_blank">
+                      <div class = "footerButton readResearchButton">Read the research</div>
+                    </a>
+                    <div id = "learnMore">
+                      <h3 class="job">More on education funding</h3>
+                      <a href = "http://apps.urban.org/features/school-funding-do-poor-kids-get-fair-share/" target = "_blank">School Funding: Do Poor Kids Get Their Fair Share?</a>
+                      <a href = "http://apps.urban.org/features/education-funding-trends/" target = "_blank">How Has Education Funding Changed over Time?</a>
+                    </div>
+                    <h4>Project credits</h4>
+                    <div class="urbanstatement">This feature was funded by the Laura and John Arnold Foundation. We are grateful to them and to all our funders, who make it possible for Urban to advance its mission. The views expressed are those of the authors and should not be attributed to the Urban Institute, its trustees, or its funders. Funders do not determine our research findings or the insights and recommendations of our experts. More information on our funding principles is available <a href = "http://www.urban.org/support" target = "_blank">here</a>. Read our terms of service <a href = "http://www.urban.org/terms-service" target = "_blank">here</a>.</div>
+
+                    <h3 class="job">Research</h3>
+                    <a href="http://www.urban.org/author/kristin-blagg" target = "_blank">Kristin Blagg</a> and <a href="http://www.urban.org/author/matthew-chingos" target = "_blank">Matthew Chingos</a>
+                
+                    <h3 class="job">Design</h3>
+                    <a href="http://www.urban.org/author/christina-baird" target = "_blank">Christina Baird</a>
+                    
+                    <h3 class="job">Development</h3>
+                    <a href="http://www.urban.org/author/benjamin-chartoff" target = "_blank">Benjamin Chartoff</a>
+
+                    <h3 class="job">Editorial</h3>
+                    <a href="http://www.urban.org/author/elizabeth-forney" target = "_blank">Elizabeth Forney</a>
+            
+                    <h3 class="job">Writing</h3>
+                    <a href="http://www.urban.org/author/alexandra-tilsley" target = "_blank">Alexandra Tilsley</a>
+
+
+                    <div class="credits"> <a href="https://github.com/UrbanInstitute/funding-formulas" target="_blank">View this project on Github.</a></div>
+                </div>
+         
+    </div> 
+    </footer>
 
 	<script src="js/lib/d3.v4.min.js"></script>
 	<script src="js/lib/jquery-1.11.3.min.js"></script>
-	<script src="js/calculator.js"></script>	
+	<script src="js/calculator.js"></script>
+
+<script>
+    // (function (i, s, o, g, r, a, m) {
+    //     i['GoogleAnalyticsObject'] = r;
+    //     i[r] = i[r] || function () { 
+    //         (i[r].q = i[r].q || []).push(arguments)
+    //     }, i[r].l = 1 * new Date();
+    //     a = s.createElement(o),  m = s.getElementsByTagName(o)[0];
+    //     a.async = 1;
+    //     a.src = g;
+    //     m.parentNode.insertBefore(a, m) 
+    // })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga'); 
+    // ga('create', 'UA-57529944-1', 'auto'); 
+    // ga('send', 'pageview');
+</script>
+
+<!-- START Parse.ly Include: Standard -->
+<div id="parsely-root" style="display: none">
+  <span id="parsely-cfg" data-parsely-site="urban.org"></span>
+</div>
+<script>
+    // (function(s, p, d) {
+    //   var h=d.location.protocol, i=p+"-"+s,
+    //       e=d.getElementById(i), r=d.getElementById(p+"-root"),
+    //       u=h==="https:"?"d1z2jf7jlzjs58.cloudfront.net"
+    //       :"static."+p+".com";
+    //   if (e) return;
+    //   e = d.createElement(s); e.id = i; e.async = true;
+    //   e.src = h+"//"+u+"/p.js"; r.appendChild(e);
+    // })("script", "parsely", document);
+</script>
+<!-- END Parse.ly Include: Standard -->
+
+
+
+	
 
 </body>
 </html>

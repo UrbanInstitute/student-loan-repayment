@@ -1,5 +1,7 @@
 var PREV_BALANCE;
 var PREV_DATA = {}
+var DOLLARS = d3.format("$,.0f")
+var MAX_YEARS = 50;
 
 function getGlobals(){
 	var globals = {}
@@ -137,7 +139,8 @@ function PV(discountRate, years, standardRepayment){
 	return (-1*standardRepayment* ((n - 1)/discountRate))/n
 
 }
-function getYearsToRepay(agi){
+
+function buildOpts(){
 	var globals = getGlobals();
 	var inputs = getInputs();
 
@@ -146,81 +149,93 @@ function getYearsToRepay(agi){
 
 	opts["standardRepayment"] = standardRepayment
 	opts["totalStandardRepayment"] = -PV(opts.discountRate, opts.standardYears, standardRepayment);
+
+	return opts
+}
+function getYearsToRepay(agi){
+
+	var opts = buildOpts()
+
+	var yearMax = (opts.capAtStandardRepayment) ? MAX_YEARS : opts.forgivenessPeriod;
 	
 
-	for(var i = 0; i < opts.forgivenessPeriod; i++){
+	for(var i = 0; i < yearMax; i++){
 		var npv = getNPV(agi, i, opts)[0]
 		var balance = getNPV(agi, i, opts)[1]
-		// console.log(npv, i)
 		if(npv <= .1 && balance <= .1){
-			// console.log(i, npv)
-			// console.log(npv, i)
 			return i;
 		}
 	}
-	return opts.forgivenessPeriod	
+	return yearMax	
 }
 
 function getTotalRepayment(agi){
-	var globals = getGlobals();
-	var inputs = getInputs();
-
-	var opts = $.extend(globals, inputs);
-	var standardRepayment = getStandardRepayment(opts)
-
-	opts["standardRepayment"] = standardRepayment
-	opts["totalStandardRepayment"] = -PV(opts.discountRate, opts.standardYears, standardRepayment);
+	var opts = buildOpts();
 	
 	var totalNPV = 0;
+	var yearMax = (opts.capAtStandardRepayment) ? MAX_YEARS : opts.forgivenessPeriod;
 
-	for(var i = 0; i < opts.forgivenessPeriod; i++){
+
+	for(var i = 0; i < yearMax; i++){
 		totalNPV += getNPV(agi, i, opts)[0]
 	}
 	return totalNPV
 	
 }
 
+
+function buildAllData(){
+	buildRepaymentData(function(dollarData){
+		buildYearsData(function(yearData){
+			var opts = buildOpts();
+
+		    var s = "adjusted_gross_income,total_repaid,years_to_repay,loan_amount,percent_discretionary_agi,forgiveness_period,minimum_payment,forgiveness_at_match_standard,annual_income_increase,poverty_level,discount_rate,inflation_rate,interest_rate,standard_repayment_fee,standard_number_of_years,standard_annual_payment,standard_total_payment_present_value"
+		    s += "\r\n"
+
+		    for(var i = 0; i < dollarData.length; i++){
+		    	var agi = dollarData[i]["agi"];
+		    	var npv = dollarData[i]["npv"];
+		    	var yearDatum = yearData.filter(function(d){ return d["agi"] == agi });
+		    	var years = yearDatum[0]["years"];
+
+		    	var yearMax = (opts.capAtStandardRepayment) ? MAX_YEARS : opts.forgivenessPeriod;
+		    	var match = (opts.capAtStandardRepayment) ? "YES" : "NO";
+		    	s += agi + "," + npv + "," + years + "," + opts.loanAmount + "," + opts.percentDiscretionaryAGI + "," + yearMax + "," + opts.minPayment + "," + match + "," + opts.incomeIncrease + "," + opts.povertyLevel + "," + opts.discountRate + "," + opts.inflation + "," + opts.interestRate + "," + opts.standardFee + "," + opts.standardYears + "," + opts.standardRepayment + "," + opts.totalStandardRepayment;
+		    	s += "\r\n"
+		    }
+
+
+
+		    var csvData = encodeURIComponent(s)
+		    var encodedUri = 'data:Application/octet-stream,' + csvData;
+		    d3.select('#downloadData a')
+		        .attr('href', encodedUri)
+		        .attr('download', 'tpc-simulator-results.csv');
+
+		})
+	})
+}
 function buildRepaymentData(callback){
 	var data = []
-	var globals = getGlobals();
-	var inputs = getInputs();
+	var opts = buildOpts();
 
-	var opts = $.extend(globals, inputs);
-	var standardRepayment = getStandardRepayment(opts)
-	var totalStandardRepayment = -PV(opts.discountRate, opts.standardYears, standardRepayment);
+	if(opts.forgivenessPeriod == MAX_YEARS){ disableForgiveness(opts.forgivenessPeriod) }
+	else{ enableForgiveness(opts.forgivenessPeriod) }
+	if(opts.capAtStandardRepayment){ disableForgiveness(opts.forgivenessPeriod) }
+	else{ enableForgiveness(opts.forgivenessPeriod) }
 
 	for(var agi = 5000; agi <= 120000; agi += 500){
-		datum = {"agi": agi, "totalStandardRepayment": totalStandardRepayment, "npv": getTotalRepayment(agi)}
+		datum = {"agi": agi, "totalStandardRepayment": opts.totalStandardRepayment, "npv": getTotalRepayment(agi)}
 		data.push(datum)
 	}
 	callback(data)
 
-
-//////////////////////////////////TO BE BALETED
-	var formatter = d3.format("$,.2f")
-	d3.select("#repaymentChart").selectAll(".trash").remove()
-	d3.select("#repaymentChart").append("div").text("10 year: " + formatter(totalStandardRepayment)).attr("class", "trash")
-	var table = d3.select("#repaymentChart").append("table").attr("class","trash")
-
-	var h = table.append("tr")
-	h.append("th").text("AGI")
-	h.append("th").text("Repayed")
-
-	var tr = table
-		.selectAll("tr")
-		.data(data)
-		.enter()
-		.append("tr")
-	tr.append("td").text(function(d){ return formatter(d.agi)})
-	// tr.append("td").text(function(d){ return formatter(d.totalStandardRepayment)})
-	tr.append("td").text(function(d){ return formatter(d.npv)})
-//////////////////////////////////END BALETED
 }
 function buildRepaymentChart(){
 	var w = 500;
 	var h = 500;
 	var svg = d3.select("#repaymentChart").append("svg").attr("width", w).attr("height",h),
-	    margin = {top: 20, right: 80, bottom: 30, left: 50},
+	    margin = {top: 20, right: 80, bottom: 30, left: 60},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom,
 	    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -243,36 +258,34 @@ function buildRepaymentChart(){
 		]);
 
 
-		g.append("g")
+		var xAx = g.append("g")
 		  .attr("class", "axis axis--x")
 		  .attr("transform", "translate(0," + height + ")")
-		  .call(d3.axisBottom(x));
+		  .call(d3.axisBottom(x).tickFormat(DOLLARS).tickValues([0,20000,40000,60000,80000,100000,120000]));
+		xAx.selectAll(".tick text").attr("x", function(d){ return (d == 0) ? 15 : 0})
+		xAx.selectAll(".tick line").attr("opacity", function(d){ return (d == 0) ? 0 : 1})
 
-		g.append("g")
+		var axis = g.append("g")
 		  .attr("class", "axis axis--y")
-		  .call(d3.axisLeft(y))
-		.append("text")
+		  .call(d3.axisLeft(y).tickSize(-width).tickFormat(DOLLARS))
+		axis.append("text")
 		  .attr("transform", "rotate(-90)")
 		  .attr("y", 6)
 		  .attr("dy", "0.71em")
 		  .attr("fill", "#000")
 
+		axis.selectAll(".tick text").attr("x", -6)
+		axis.selectAll(".tick line").style("opacity", function(d){ return (d==0) ? 0 : 1})
+
 
 		g.append("path")
 		  .datum(data)
-		  .attr("fill", "none")
 		  .attr("class", "repaymentLine input")
-		  .attr("stroke", "steelblue")
-		  .attr("stroke-linejoin", "round")
-		  .attr("stroke-linecap", "round")
-		  .attr("stroke-width", 1.5)
 		  .attr("d", line);
 
 		g.append("line")
 		  .datum(data)
-		  .attr("fill", "none")
   		  .attr("class", "repaymentLine fixed")
-		  .attr("stroke", "steelblue")
 		  .attr("x1", x(5000))
 		  .attr("x2", width)
 		  .attr("y1", function(d){
@@ -281,6 +294,14 @@ function buildRepaymentChart(){
 		  .attr("y2", function(d){
 		  	return y(d[0]["totalStandardRepayment"])
 		  })
+		g.append("text")
+			.datum(data)
+			.attr("id", "tenYearLabel")
+			.attr("y", function(d){
+		  		return y(d[0]["totalStandardRepayment"]) - 6
+		  	})
+		  	.attr("x", (width - 136)*.5)
+		  	.text("Standard 10 year plan")
 	})
 
 }
@@ -290,7 +311,7 @@ function updateRepaymentChart(){
 
 	var w = 500;
 	var h = 500;
-	var	margin = {top: 20, right: 80, bottom: 30, left: 50},
+	var	margin = {top: 20, right: 80, bottom: 30, left: 60},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom;
 
@@ -310,9 +331,12 @@ function updateRepaymentChart(){
 			200000
 		]);
 
-		svg.selectAll(".axis.axis--y")
+		var axis = svg.selectAll(".axis.axis--y")
 			.transition()
-			.call(d3.axisLeft(y))
+			.call(d3.axisLeft(y).tickSize(-width).tickFormat(DOLLARS))
+
+		axis.selectAll(".tick text").attr("x", -6)
+		axis.selectAll(".tick line").style("opacity", function(d){ return (d==0) ? 0 : 1})
 
 		svg.selectAll(".repaymentLine.input")
 		  .datum(data)
@@ -328,6 +352,12 @@ function updateRepaymentChart(){
 		  .attr("y2", function(d){
 		  	return y(d[0]["totalStandardRepayment"])
 		  })
+		svg.selectAll("#tenYearLabel")
+			.datum(data)
+			.transition()
+			.attr("y", function(d){
+		  		return y(d[0]["totalStandardRepayment"]) - 6
+		  	})
 	})
 
 }
@@ -348,32 +378,12 @@ function buildYearsData(callback){
 	}
 	callback(data)
 
-//////////////////////////////////TO BE BALETED
-	var formatter = d3.format("$,.2f")
-	var years = d3.format(".0f")
-	d3.select("#yearsChart").selectAll(".trash").remove()
-	var table = d3.select("#yearsChart").append("table").attr("class","trash")
-
-	var h = table.append("tr")
-	h.append("th").text("AGI")
-	h.append("th").text("Years")
-
-	var tr = table
-		.selectAll("tr")
-		.data(data)
-		.enter()
-		.append("tr")
-	tr.append("td").text(function(d){ return formatter(d.agi)})
-	// tr.append("td").text(function(d){ return formatter(d.totalStandardRepayment)})
-	tr.append("td").text(function(d){ return years(d.years)})
-//////////////////////////////////END BALETED
-
 }
 function buildYearsChart(){
-	var w = 500;
+	var w = 500; //should be diff than yrs, bc margins diff
 	var h = 500;
 	var svg = d3.select("#yearsChart").append("svg").attr("width", w).attr("height",h),
-	    margin = {top: 20, right: 80, bottom: 30, left: 50},
+	    margin = {top: 20, right: 80, bottom: 30, left: 20},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom,
 	    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -392,33 +402,33 @@ function buildYearsChart(){
 
 		y.domain([
 			0,
-			100
+			60
 		]);
 
 
-		g.append("g")
+		var xAx = g.append("g")
 		  .attr("class", "axis axis--x")
 		  .attr("transform", "translate(0," + height + ")")
-		  .call(d3.axisBottom(x));
+		  .call(d3.axisBottom(x).tickFormat(DOLLARS).tickValues([0,20000,40000,60000,80000,100000,120000]));
+		xAx.selectAll(".tick text").attr("x", function(d){ return (d == 0) ? 15 : 0})
+		xAx.selectAll(".tick line").attr("opacity", function(d){ return (d == 0) ? 0 : 1})
 
-		g.append("g")
+		var axis = g.append("g")
 		  .attr("class", "axis axis--y")
-		  .call(d3.axisLeft(y))
-		.append("text")
+		  .call(d3.axisLeft(y).tickSize(-width))
+		axis.append("text")
 		  .attr("transform", "rotate(-90)")
 		  .attr("y", 6)
 		  .attr("dy", "0.71em")
 		  .attr("fill", "#000")
 
+		axis.selectAll(".tick text").attr("x", -6)
+		axis.selectAll(".tick line").style("opacity", function(d){ return (d==0) ? 0 : 1})
+
 
 		g.append("path")
 		  .datum(data)
-		  .attr("fill", "none")
 		  .attr("class", "yearsLine")
-		  .attr("stroke", "steelblue")
-		  .attr("stroke-linejoin", "round")
-		  .attr("stroke-linecap", "round")
-		  .attr("stroke-width", 1.5)
 		  .attr("d", line);
 
 	})
@@ -429,7 +439,7 @@ function updateYearsChart(){
 
 	var w = 500;
 	var h = 500;
-	var	margin = {top: 20, right: 80, bottom: 30, left: 50},
+	var	margin = {top: 20, right: 80, bottom: 30, left: 20},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom;
 
@@ -446,12 +456,14 @@ function updateYearsChart(){
 
 		y.domain([
 			0,
-			100
+			60
 		]);
 
-		svg.selectAll(".axis.axis--y")
+		var axis = svg.selectAll(".axis.axis--y")
 			.transition()
-			.call(d3.axisLeft(y))
+			.call(d3.axisLeft(y).tickSize(-width))
+		axis.selectAll(".tick text").attr("x", -6)
+		axis.selectAll(".tick line").style("opacity", function(d){ return (d==0) ? 0 : 1})
 
 		svg.selectAll(".yearsLine")
 		  .datum(data)
@@ -462,15 +474,65 @@ function updateYearsChart(){
 
 }
 
+function buildGradient(){
+  var svg = d3.select("#gradientHolder")
+      .attr("width", 1200)
+      .attr("height", 180)
+  var gradient = svg.append("svg:defs")
+    .append("svg:linearGradient")
+      .attr("id", "gradient")
+      .attr("x1", "0%")
+      .attr("y2", "40%")
+      .attr("x2", "0%")
+      .attr("y1", "100%")
+      .attr("spreadMethod", "pad");
 
+  gradient.append("svg:stop")
+      .attr("offset", "0%")
+      .attr("stop-color", "#fff")
+      .attr("stop-opacity", 1);
+
+  gradient.append("svg:stop")
+      .attr("offset", "100%")
+      .attr("stop-color", "#fff")
+      .attr("stop-opacity", 0);
+
+  svg.append("rect")
+      .attr("class", "scrollFade gradient")
+      .attr("x",0)
+      .attr("y",0)
+      .attr("width", 1200)
+      .attr("height", 180)
+      .attr("fill", "url(#gradient)")
+}
+
+function disableForgiveness(years){
+	d3.select("#forgivenessPeriod").classed("disabled", true)
+	d3.select(".controlContainer.forgivenessPeriod .valLabel").classed("disabled", true)
+	d3.select(".controlContainer.forgivenessPeriod .suffix").classed("disabled", true)
+	d3.select("#noForgiveness").classed("disabled", true)
+	$("#forgivenessPeriod").val(50)
+	$("#forgivenessPeriodLabel").val(50)
+}
+function enableForgiveness(years){
+	if(years == 50){ return false}
+	d3.select("#forgivenessPeriod").classed("disabled", false)
+	d3.select(".controlContainer.forgivenessPeriod .valLabel").classed("disabled", false)
+	d3.select(".controlContainer.forgivenessPeriod .suffix").classed("disabled", false)
+	d3.select("#noForgiveness").classed("disabled", false)
+	
+}
 
 function buildCharts(){
 	buildRepaymentChart();
 	buildYearsChart();
+	buildAllData();
+	buildGradient();
 }
 function updateCharts(){
 	updateRepaymentChart();
 	updateYearsChart();
+	buildAllData();
 }
 
 
@@ -478,24 +540,21 @@ function updateCharts(){
 
 d3.selectAll("#percentDiscretionaryAGI").on("input", function(){
 	PREV_DATA = {}
-	var formatter = d3.format(".1%")
 	var val = $(this).val()
-	$(this.parentNode).find(".valLabel").text(formatter(val))
+	$(this.parentNode).find(".valLabel").val(parseInt(val*100))
 	updateCharts()
 })
 
 d3.selectAll("#forgivenessPeriod").on("input", function(){
 	PREV_DATA = {}
-	var formatter = d3.format(".0f")
 	var val = $(this).val()
-	$(this.parentNode).find(".valLabel").text(formatter(val))
+	$(this.parentNode).find(".valLabel").val(parseInt(val))
 	updateCharts()
 })
 d3.selectAll("#minPayment").on("input", function(){
 	PREV_DATA = {}
-	var formatter = d3.format("$.0f")
 	var val = $(this).val()
-	$(this.parentNode).find(".valLabel").text(formatter(val))
+	$(this.parentNode).find(".valLabel").val(parseInt(val))
 	updateCharts()
 })
 d3.selectAll("#loanAmount").on("input", function(){
@@ -503,10 +562,38 @@ d3.selectAll("#loanAmount").on("input", function(){
 	var formatter = d3.format("$,.0f")
 	var val = $(this).val()
 	$(this.parentNode).find(".valLabel").text(formatter(val))
+
+	$("#yearsTitle").find(".valLabel").text(formatter(val))
+	$("#loanAmount2").val(val)
+	updateCharts()
+})
+d3.selectAll("#loanAmount2").on("input", function(){
+	PREV_DATA = {}
+	var formatter = d3.format("$,.0f")
+	var val = $(this).val()
+	$(this.parentNode).find(".valLabel").text(formatter(val))
+
+	$("#repaymentTitle").find(".valLabel").text(formatter(val))
+	$("#loanAmount").val(val)
 	updateCharts()
 })
 d3.selectAll("#capAtStandardRepayment").on("change", function(){
 	PREV_DATA = {}
+	console.log($(this).checked)
 	updateCharts()	
+})
+d3.select("#clickToExpand").on("click", function(){
+	if(d3.select(this).classed("closed")){
+		d3.select(this).classed("closed", false)
+		d3.select("#topText")
+			.transition()
+			.style("height", "1000px")
+	}else{
+		d3.select(this).classed("closed", true)
+		d3.select("#topText")
+			.transition()
+			.style("height", "400px")
+
+	}
 })
 buildCharts()

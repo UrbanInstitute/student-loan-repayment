@@ -1,0 +1,783 @@
+body{
+	font-family: Lato;
+}
+.controlContainer{
+    display: inline-block;
+    width: 280px;
+    height: 102px;
+    clear: right;
+}
+#repaymentChart, #yearsChart{
+	float: left;
+	margin-bottom: 10px;
+}
+#repaymentChart{
+	clear: left;
+	padding-left: 90px;
+}
+
+
+
+
+/*#sections{
+  pointer-events: none;
+  opacity: 0;
+}
+*/
+
+*:focus{
+  outline: none;
+}
+body{
+  font-family: "Lato";
+}
+.container {
+  width: 1180px;
+  margin: 0 auto;
+}
+
+#graphic {
+  padding-top: 60px;
+}
+
+#topTitle{
+  font-size: 30px;
+  text-align: center;
+  padding-bottom: 20px;
+}
+#topText{
+  height: 400px;
+  overflow: hidden;
+  margin-top: -140px;
+  padding: 40px;
+  margin-bottom:30px;
+  font-size:16px;
+  font-weight:400;
+  color:#000;
+  background: #fff; 
+  z-index: 1000;
+  position: relative;
+}
+#bottomTitle{
+  font-weight: bold;
+  margin-bottom: 10px;  
+}
+#bottomContent{
+  width: 1150px;
+    margin: 0 auto;
+    padding: 0px;
+}
+#topHR{
+  width: 130px;
+  height: 6px;
+  background-color: #1696d2;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+
+p{
+  line-height:1.6;
+  margin-bottom:15px !important;
+}
+
+
+#isMobile, #isPhone{
+    display: none;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+@media (max-height: 636px) , (max-width: 768px){
+  #isPhone{
+    display: block;
+  }
+}
+
+@media (max-width: 1200px){
+  .container{
+    margin-left: 10px;
+  }
+}
+@media (max-width: 1170px){
+  .headerimage{
+    height: 440px !important;
+  }
+  .container{
+    margin-left: auto;
+    width: 100%;
+  }
+  #isMobile{
+    display: block;
+  }
+  #topText, #bottomContent{
+    font-size: 18px;
+  }
+}
+@media (max-width: 930px){
+  .headerimage {
+    height: 350px !important;
+  }
+  #topTitle {
+    font-size: 25px;
+  }
+}
+@media (max-width: 768px){
+  .step {
+    margin-bottom: 1200px;
+  }
+}
+@media (max-width: 350px){
+  #sections{
+    /*width: 300px;*/
+    left: -20px;
+    /*pointer-events: none;*/
+  }
+}
+
+@media (max-width: 500px){
+  .headerimage {
+    height: 180px !important;
+    top: 20px;
+  }
+  #topText, #bottomContent{
+    margin-top: -90px;
+    padding: 20px;
+  }
+  #sections{
+    width: 300px;
+    /*left: -20px;*/
+    pointer-events: none;
+  }
+}
+
+
+
+/********header (below urban menu)**********/
+   
+
+.headerimage{
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 720px;
+  z-index:-1;
+}
+
+.headerwrapper{
+  padding-top:120px;
+}
+
+#heroimage{
+   background-image: url("https://apps.urban.org/features/funding-formulas/images/header-img.png");
+     background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+
+}
+
+
+@media (max-width: 2000px) {
+  .headerimage{ height:600px;}
+}
+/*browser windows smaller than 850px*/
+@media (max-width: 600px) {
+   .headerimage{ height:300px;}
+   .div-title-block {
+    font-size: 1.6em !important;
+   }
+}
+
+@media (max-width: 991px) {
+   
+   .headerwrapper{padding-top:125px;}
+   
+}
+
+@media  (max-width: 480px) {
+   .container {margin-bottom: 40px; padding:0px 4px;}
+   .headerimage{width: 100%; height: 300px;}
+   .headerwrapper{padding-top:80px;}
+   h1 { font-size:24px;}
+ 
+}
+
+
+
+
+
+
+
+
+#gradientHolder{
+	pointer-events: none;
+	bottom: 0px;
+    position: absolute;
+}
+#clickToExpand{
+    position: absolute;
+    bottom: 0px;
+    z-index: 100;
+    background: #1696d2;
+    padding: 20px;
+    color: white;
+    left: calc(50% - 150px);
+    cursor: pointer;
+}
+
+
+/********************************************************/
+/*********************** CHARTS *************************/
+/********************************************************/
+
+.repaymentLine, .yearsLine{
+	fill: none;
+	stroke-width: 2px;
+	stroke-linejoin: round;
+	stroke-linecap: round;
+}
+.repaymentLine.input, .yearsLine{
+	stroke: #1696d2;
+}
+.repaymentLine.fixed{
+	stroke: #fdbf11;
+}
+
+.axis--y .tick line{
+	stroke: #dedddd;
+	stroke-width: 1px;
+}
+.axis--y path{
+	display: none;
+}
+.axis text{
+	font-family: Lato;
+	font-size: 12px;
+}
+#tenYearLabel{
+	font-size: 14px;
+    font-weight: bold;
+}
+
+
+/********************************************************/
+/******************* CONTROLS ***************************/
+/********************************************************/
+
+#controls{
+	width: 880px;
+	margin: 0 auto;
+}
+#controlsLeft, #controlsRight{
+	width: 280px;
+	float: left;
+}
+.chartTitle{
+	font-size: 18px;
+    font-weight: bold;
+    position: relative;
+    margin-bottom: 30px;
+}
+.chartTitle div{
+	display: inline-block;
+}
+.chartTitle .valLabel{
+	width: 100px;
+    text-align: center;
+    /*color: #1696d2;*/
+}
+.chartTitle input{
+	position: absolute !important;
+    top: 22px !important;
+    width: 100px;
+}
+#loanAmount{
+	left: 239px;
+}
+#loanAmount2{
+	left: 186px;
+}
+
+
+#downloadData{
+    padding: 13px 20px 13px 20px;
+    background-color: #1696d2;
+    color: #fff;
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 5px;
+    margin-top: 20px;
+    margin-bottom: 50px;
+    float: right;
+    margin-bottom: 120px;
+    margin-right: 161px;
+}
+#downloadData a{
+	color: #fff;
+}
+#downloadData:hover{
+	background-color: #353535;
+}
+
+.controlContainer .valLabel{
+	text-align: right;
+    border: 2px solid #5c5859;
+    background: #ffffff;
+    width: 72px;
+    font-size: 14px;
+    font-weight: bold;
+    padding-right: 16px;
+	margin-top: 6px;
+    margin-left: 9px;
+}
+.controlContainer .valLabel.disabled{
+	border: 2px solid #d2d2d2;
+	color: #d2d2d2;
+}
+.controlContainer.percentDiscretionaryAGI .suffix{
+    font-weight: bold;
+    font-size: 14px;
+    margin-left: -15px;
+}
+.controlContainer.forgivenessPeriod .valLabel{
+	padding-right: 42px;
+}
+.controlContainer.forgivenessPeriod .suffix{
+	margin-left: -39px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.suffix.disabled{
+	color: #d2d2d2;
+}
+.controlContainer.minPayment .prefix{
+	position: relative;
+	left: 21px;
+	font-size: 14px;
+	font-weight: bold;
+	margin-left: -8px;
+}
+.controlContainer.minPayment .valLabel{
+	text-align: left;
+	padding-left: 13px;
+}
+.controlContainer .label{
+	font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+#noForgiveness{
+	font-size: 13px;
+    font-style: italic;
+    margin-top: 8px;
+    color: #9d9d9d;
+    display: none;
+}
+#noForgiveness.disabled{
+	display: block;
+}
+#capLabel{
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+    width: 190px;
+    top: 7px;
+    position: relative;
+}
+
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+
+
+
+
+
+/* Base for label styling */
+[type="checkbox"]:not(:checked),
+[type="checkbox"]:checked {
+  position: absolute;
+  left: -9999px;
+}
+[type="checkbox"]:not(:checked) + label,
+[type="checkbox"]:checked + label {
+  position: relative;
+  padding-left: 1.95em;
+  cursor: pointer;
+}
+
+/* checkbox aspect */
+[type="checkbox"]:not(:checked) + label:before,
+[type="checkbox"]:checked + label:before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  width: 1.25em; height: 1.25em;
+  border: 2px solid #9d9d9d;
+  background: #fff;
+  border-radius: 100%;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.1);
+}
+/* checked mark aspect */
+[type="checkbox"]:not(:checked) + label:after,
+[type="checkbox"]:checked + label:after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: #1696d2;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    border-radius: 100%;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+/* checked mark aspect changes */
+[type="checkbox"]:not(:checked) + label:after {
+  opacity: 0;
+  transform: scale(0);
+}
+[type="checkbox"]:checked + label:after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+
+/*
+
+
+
+[type="checkbox"]:checked,
+[type="checkbox"]:not(:checked) {
+    position: absolute;
+    left: -9999px;
+}
+[type="checkbox"]:checked + label,
+[type="checkbox"]:not(:checked) + label
+{
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    line-height: 20px;
+    display: inline-block;
+    color: #666;
+}
+[type="checkbox"]:checked + label:before,
+[type="checkbox"]:not(:checked) + label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #ddd;
+    border-radius: 100%;
+    background: #fff;
+}
+[type="checkbox"]:checked + label:after,
+[type="checkbox"]:not(:checked) + label:after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: #F87DA9;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    border-radius: 100%;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+[type="checkbox"]:not(:checked) + label:after {
+    opacity: 0;
+    -webkit-transform: scale(0);
+    transform: scale(0);
+}
+[type="checkbox"]:checked + label:after {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}*/
+
+/***************************************************************************/
+/************************ CROSS BROWSER RANGE INPUT ************************/
+/***************************************************************************/
+/*modified from http://brennaobrien.com/blog/2014/05/style-input-type-range-in-every-browser.html*/
+
+input[type=range] {
+	float: left;
+	clear: both;
+	position: relative;
+	top: 6px;
+    /*removes default webkit styles*/
+    -webkit-appearance: none;
+    
+    /*fix for FF unable to apply focus style bug */
+    border: 1px solid #ffffff;
+    height: 18px;
+    background-color: transparent;
+    
+    /*required for proper track sizing in FF*/
+    /*width: 300px;*/
+}
+input[type=range]::-webkit-slider-runnable-track {
+    /*width: 300px;*/
+    height: 5px;
+    background: #9d9d9d;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #1696d2;
+    margin-top: -4px;
+    cursor: pointer;
+}
+input[type=range]:focus {
+    outline: 0;
+}
+input::-moz-focus-inner{
+	outline: 0;
+}
+input[type=range]::-moz-focus-outer {
+    border: 0;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #353535;
+    outline: none;
+}
+
+input[type=range]::-moz-range-track {
+    /*width: 300px;*/
+    height: 5px;
+    background: #9d9d9d;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #1696d2;
+    cursor: pointer;
+}
+
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+    outline: 1px solid #ffffff;
+    outline-offset: -1px;
+}
+
+input[type=range]::-ms-track {
+    /*width: 300px;*/
+    height: 5px;
+    
+    /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+    background: transparent;
+    
+    /*leave room for the larger thumb to overflow with a transparent border */
+    border-color: transparent;
+    border-width: 6px 0;
+
+    /*remove default tick marks*/
+    color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+    background: #9d9d9d;
+    border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+    background: #9d9d9d;
+    border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #1696d2;
+    cursor: pointer;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: #353535;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: #353535;
+}
+
+
+/***************************************************************************/
+/******************* CROSS BROWSER DISABLED RANGE INPUT ********************/
+/***************************************************************************/
+/*modified from http://brennaobrien.com/blog/2014/05/style-input-type-range-in-every-browser.html*/
+
+input.disabled[type=range]::-webkit-slider-runnable-track {
+    background: #d2d2d2;
+}
+input.disabled[type=range]::-webkit-slider-thumb {
+    background: #d2d2d2;
+}
+input.disabled[type=range]:focus::-webkit-slider-runnable-track {
+    background: #d2d2d2;
+}
+
+input.disabled[type=range]::-moz-range-track {
+    background: #d2d2d2;
+}
+input.disabled[type=range]::-moz-range-thumb {
+    background: #d2d2d2;
+}
+
+input.disabled[type=range]::-ms-fill-lower {
+    background: #d2d2d2;
+}
+input.disabled[type=range]::-ms-fill-upper {
+    background: #d2d2d2;
+}
+input.disabled[type=range]::-ms-thumb {
+    background: #d2d2d2;
+}
+input.disabled[type=range]:focus::-ms-fill-lower {
+    background: #d2d2d2;
+}
+input.disabled[type=range]:focus::-ms-fill-upper {
+    background: #d2d2d2;
+}
+
+
+
+
+
+
+
+/***************************************************************************/
+/******************** CROSS BROWSER TRIANGLE RANGE INPUT *******************/
+/***************************************************************************/
+/*modified from http://brennaobrien.com/blog/2014/05/style-input-type-range-in-every-browser.html*/
+
+input.triangle[type=range] {
+	float: left;
+	clear: both;
+	position: relative;
+	top: 6px;
+    /*removes default webkit styles*/
+    -webkit-appearance: none;
+    
+    /*fix for FF unable to apply focus style bug */
+    border: 1px solid #ffffff;
+    height: 18px;
+    background-color: transparent;
+    
+    /*required for proper track sizing in FF*/
+    /*width: 300px;*/
+}
+input.triangle[type=range]::-webkit-slider-runnable-track {
+    /*width: 300px;*/
+    height: 5px;
+    background: #9d9d9d;
+    border: none;
+    border-radius: 3px;
+}
+input.triangle[type=range]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	width: 0; 
+	height: 0; 
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 18px solid #1696d2;
+	margin-top: -9px;
+	cursor: pointer;
+	border-radius: 0;
+	background: none;
+}
+input.triangle[type=range]:focus {
+    outline: 0;
+}
+input.triangle::-moz-focus-inner{
+	outline: 0;
+}
+input.triangle[type=range]::-moz-focus-outer {
+    border: 0;
+}
+input.triangle[type=range]:focus::-webkit-slider-runnable-track {
+    background: #353535;
+    outline: none;
+}
+
+input.triangle[type=range]::-moz-range-track {
+    /*width: 300px;*/
+    height: 5px;
+    background: #9d9d9d;
+    border: none;
+    border-radius: 3px;
+}
+input.triangle[type=range]::-moz-range-thumb {
+	width: 0; 
+	height: 0; 
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 18px solid #1696d2;
+	margin-top: -9px;
+	cursor: pointer;
+	border-radius: 0;
+	background: none;
+}
+
+/*hide the outline behind the border*/
+input.triangle[type=range]:-moz-focusring{
+    outline: 1px solid #ffffff;
+    outline-offset: -1px;
+}
+
+input.triangle[type=range]::-ms-track {
+    /*width: 300px;*/
+    height: 5px;
+    
+    /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+    background: transparent;
+    
+    /*leave room for the larger thumb to overflow with a transparent border */
+    border-color: transparent;
+    border-width: 6px 0;
+
+    /*remove default tick marks*/
+    color: transparent;
+}
+input.triangle[type=range]::-ms-fill-lower {
+    background: #9d9d9d;
+    border-radius: 10px;
+}
+input.triangle[type=range]::-ms-fill-upper {
+    background: #9d9d9d;
+    border-radius: 10px;
+}
+input.triangle[type=range]::-ms-thumb {
+	width: 0; 
+	height: 0; 
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 18px solid #1696d2;
+	margin-top: -9px;
+	cursor: pointer;
+	border-radius: 0;
+	background: none;
+}
+input.triangle[type=range]:focus::-ms-fill-lower {
+    background: #353535;
+}
+input.triangle[type=range]:focus::-ms-fill-upper {
+    background: #353535;
+}
