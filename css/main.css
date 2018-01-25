@@ -285,7 +285,7 @@ p{
     text-align: center;
     cursor: pointer;
 }
-.button:hover{
+.button:hover, .button.clicked{
 	background: #353535;
 }
 .chartTitle{

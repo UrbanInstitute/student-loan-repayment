@@ -523,6 +523,36 @@ function enableForgiveness(years){
 	
 }
 
+function setPlan(o, id){
+	// var dfd = $.Deferred();
+	// dfd.done()
+		// .
+	var elems = ["percentDiscretionaryAGI", "forgivenessPeriod", "minPayment"]
+	for(var i =0; i < elems.length; i++){
+		var el = elems[i]
+		var mult = (el == "percentDiscretionaryAGI") ? 100 : 1;
+
+		if(o[el] != null){
+			var val = o[el]
+			$(".controlContainer." + el).find(".valLabel").val(parseInt(val*mult))
+			$(".controlContainer." + el).find(".controlSlider").val(val)
+		}
+		if(o["capAtStandardRepayment"] != null){
+			var val = o["capAtStandardRepayment"]
+			$("#capAtStandardRepayment").prop("checked", val)
+		}
+	}
+	// $("#percentDiscretionaryAGI").val(percentDiscretionaryAGI)
+	// console.log(percentDiscretionaryAGI)
+	// $(".controlContainer.percentDiscretionaryAGI").find(".valLabel").val(parseInt(percentDiscretionaryAGI*100))
+	
+	// $("#percentDiscretionaryAGI")[0].input()
+	updateCharts();	
+	d3.select("#" + id).classed("clicked", true)
+	
+}
+
+
 function buildCharts(){
 	buildRepaymentChart();
 	buildYearsChart();
@@ -530,6 +560,7 @@ function buildCharts(){
 	buildGradient();
 }
 function updateCharts(){
+	d3.selectAll(".button.clicked").classed("clicked", false)
 	updateRepaymentChart();
 	updateYearsChart();
 	buildAllData();
@@ -579,9 +610,30 @@ d3.selectAll("#loanAmount2").on("input", function(){
 })
 d3.selectAll("#capAtStandardRepayment").on("change", function(){
 	PREV_DATA = {}
-	console.log($(this).checked)
 	updateCharts()	
 })
+
+d3.select("#repayeUndergrad").on("click", function(){
+	PREV_DATA = {}
+	var o = {"percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":20,"capAtStandardRepayment":false, "loanAmount": null}
+	setPlan(o, "repayeUndergrad")
+})
+d3.select("#repayeGrad").on("click", function(){
+	PREV_DATA = {}
+	var o = {"percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":25,"capAtStandardRepayment":false, "loanAmount": null}
+	setPlan(o, "repayeGrad")
+})
+d3.select("#repayePSLF").on("click", function(){
+	PREV_DATA = {}
+	var o = {"percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":10,"capAtStandardRepayment":false, "loanAmount": null}
+	setPlan(o, "repayePSLF")
+})
+d3.select("#prosper").on("click", function(){
+	PREV_DATA = {}
+	var o = {"percentDiscretionaryAGI":.15, "minPayment":25, "forgivenessPeriod":50,"capAtStandardRepayment":true, "loanAmount": null}
+	setPlan(o, "prosper")
+})
+
 d3.select("#clickToExpand").on("click", function(){
 	if(d3.select(this).classed("closed")){
 		d3.select(this).classed("closed", false)
