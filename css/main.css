@@ -272,9 +272,21 @@ p{
 	width: 880px;
 	margin: 0 auto;
 }
-#controlsLeft, #controlsRight{
+#controlsLeft, #controlsRight, #buttons{
 	width: 280px;
 	float: left;
+}
+.button{
+	width: 187px;
+    background: #1696d2;
+    margin-bottom: 10px;
+    padding: 8px;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+.button:hover{
+	background: #353535;
 }
 .chartTitle{
 	font-size: 18px;
