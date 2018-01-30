@@ -254,7 +254,7 @@ function buildRepaymentChart(){
 
 		y.domain([
 			0,
-			200000
+			150000
 		]);
 
 
@@ -325,10 +325,10 @@ function updateRepaymentChart(){
 
 	buildRepaymentData(function(data){
 		x.domain(d3.extent(data, function(d) { return d.agi; }));
-
+		var yMax = (d3.max(data, function(d){ return d.npv}) >= 150000) ? 230000 : 150000;
 		y.domain([
 			0,
-			200000
+			yMax
 		]);
 
 		var axis = svg.selectAll(".axis.axis--y")
@@ -402,7 +402,7 @@ function buildYearsChart(){
 
 		y.domain([
 			0,
-			60
+			50
 		]);
 
 
@@ -456,7 +456,7 @@ function updateYearsChart(){
 
 		y.domain([
 			0,
-			60
+			50
 		]);
 
 		var axis = svg.selectAll(".axis.axis--y")
@@ -482,7 +482,7 @@ function buildGradient(){
     .append("svg:linearGradient")
       .attr("id", "gradient")
       .attr("x1", "0%")
-      .attr("y2", "40%")
+      .attr("y2", "0%")
       .attr("x2", "0%")
       .attr("y1", "100%")
       .attr("spreadMethod", "pad");
@@ -495,14 +495,14 @@ function buildGradient(){
   gradient.append("svg:stop")
       .attr("offset", "100%")
       .attr("stop-color", "#fff")
-      .attr("stop-opacity", 0);
+      .attr("stop-opacity", .3);
 
   svg.append("rect")
       .attr("class", "scrollFade gradient")
       .attr("x",0)
       .attr("y",0)
       .attr("width", 1200)
-      .attr("height", 180)
+      .attr("height", 200)
       .attr("fill", "url(#gradient)")
 }
 
@@ -637,14 +637,22 @@ d3.select("#prosper").on("click", function(){
 d3.select("#clickToExpand").on("click", function(){
 	if(d3.select(this).classed("closed")){
 		d3.select(this).classed("closed", false)
+			.text("Click to Hide")
 		d3.select("#topText")
 			.transition()
 			.style("height", "1000px")
+		d3.select("#gradientHolder")
+			.transition()
+			.style("opacity",0)
 	}else{
 		d3.select(this).classed("closed", true)
+			.text("Click to Read More")
 		d3.select("#topText")
 			.transition()
 			.style("height", "400px")
+		d3.select("#gradientHolder")
+			.transition()
+			.style("opacity",1)
 
 	}
 })
