@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Title of feature</title>
+  <title>Charting Student Loan Repayment</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="initial-scale=1, maximum-scale=1">
@@ -88,9 +88,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <div class="container">
   <div id='graphic'>
     <div id = "topText">
-<div id = "topTitle">Title of feature</div>
+<div id = "topTitle">Charting Student Loan Repayment</div>
         <div id = "topHR"></div> 
-        <div class = "pubDate">November 29, 2017</div>
+        <div class = "pubDate">February 20, 2018</div>
         <p>
 		To help make student loan repayment affordable, the US Department of Education offers several repayment plans that set monthly payments based on the borrower’s income. These plans require borrowers to pay a portion of their discretionary income (earnings above 150 percent of the federal poverty level) for a given number of years, after which the remainder of the loan is forgiven. 
 		</p>
@@ -122,37 +122,38 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
 
     <div id = "controls">
-      <div id = "controlTitle">EXPLORING STUDENT LOAN REPAYMENT</div>
+      <div id = "controlTitle">Build a new repayment plan</div>
       <div id = "buttons">
-        <div id = "buttonLabel">label that explains these are four scenarios to help you see how interesting this data is</div>
-        <div class = "button" id = "repayeUndergrad">REPAYE undergraduate</div>
-        <div class = "button" id = "repayeGrad">REPAYE graduate</div>
-        <div class = "button" id = "repayePSLF">REPAYE with PSLF</div>
-        <div class = "button" id = "prosper">HEA PROSPER plan</div>
+        <div id = "buttonLabel">Click to model current or proposed repayment plans</div>
+        <div class = "button clicked" id = "repayeUndergrad">REPAYE undergraduate<div class = "currentLaw">current law</div></div>
+
+        <div class = "button" id = "repayeGrad">REPAYE graduate<div class = "currentLaw">current law</div></div>
+        <div class = "button" id = "repayePSLF">REPAYE with PSLF<div class = "currentLaw">current law</div></div>
+        <div class = "button" id = "prosper">PROSPER Act proposal</div>
       </div>
 
     	<div id = "sliders">
 			<div class = "controlContainer percentDiscretionaryAGI">
-				<div class = "label">Percent discretionary AGI</div>
+				<div class = "label">Percent of discretionary income borrower pays</div>
 				<input id = "percentDiscretionaryAGI" class = "controlSlider" type="range" min="0" max="1" step="0.01" value =".1">
 				<!-- <div class = "valLabel">10%</div> -->
 				<input type = "number" class = "valLabel" value ="10" min ="0" max="100"><span class = "suffix">%</span>
 			</div>
 
 			<div class = "controlContainer minPayment">
-				<div class = "label">Minimum payment</div>
-				<input id = "minPayment" class = "controlSlider" type="range" min="0" max="100" step="1" value ="25">
-				<span class = "prefix">$</span><input type = "number" class = "valLabel" value ="25" min ="0" max="100">
+				<div class = "label">Minimum monthly payment</div>
+				<input id = "minPayment" class = "controlSlider" type="range" min="0" max="100" step="1" value ="0">
+				<span class = "prefix">$</span><input type = "number" class = "valLabel" value ="0" min ="0" max="100">
 			</div>
 			<div class = "controlContainer forgivenessPeriod">
 				<div class = "label">Forgiveness period</div>
-				<input id = "forgivenessPeriod" class = "controlSlider" type="range" min="0" max="50" step="1" value ="25">
-				<input id = "forgivenessPeriodLabel" type = "number" class = "valLabel" value = "25" min = "0" max = "50"><span class = "suffix">years</span>
+				<input id = "forgivenessPeriod" class = "controlSlider" type="range" min="0" max="50" step="1" value ="20">
+				<input id = "forgivenessPeriodLabel" type = "number" class = "valLabel" value = "20" min = "0" max = "50"><span class = "suffix">years</span>
 				<div id = "noForgiveness">No forgiveness period</div>
 			</div>
 			<div class = "controlContainer capAtStandardRepayment">
 		    	<input type="checkbox" id="capAtStandardRepayment" value="cap">
-				<label for="capAtStandardRepayment"></label><div id = "capLabel">Forgive after matching standard 10 year plan</div>
+				<label for="capAtStandardRepayment"></label><div id = "capLabel">Limit total amount paid to amount repaid under 10-year plan</div>
 			</div>
 		</div>
 	</div>
@@ -161,17 +162,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	<div id = "repaymentChart">
 		<div id = "repaymentTitle" class = "chartTitle">
 			<div id = "repaymentTitleLeft">Total amount paid on a loan of</div>
-			<div class = "valLabel">$100,000</div>
-			<input class = "triangle" id = "loanAmount" class = "controlSlider" type="range" min="5000" max="150000" step="500" value ="100000">
-			<div id = "repaymentTitleRight">, by income</div>
+			<div class = "valLabel">$30,000</div>
+			<input class = "triangle" id = "loanAmount" class = "controlSlider" type="range" min="5000" max="150000" step="500" value ="30000">
+			<div id = "repaymentSubtitle" class = "chartSubtitle">By starting income</div>
 		</div>
 	</div>
 	<div id = "yearsChart">
 		<div id = "yearsTitle" class = "chartTitle">
 			<div id = "yearsTitleLeft">Years to repay a loan of</div>
-			<div class = "valLabel">$100,000</div>
-			<input class = "triangle" id = "loanAmount2" class = "controlSlider" type="range" min="5000" max="150000" step="500" value ="100000">
-			<div id = "yearsTitleRight">, by income</div>
+			<div class = "valLabel">$30,000</div>
+			<input class = "triangle" id = "loanAmount2" class = "controlSlider" type="range" min="5000" max="150000" step="500" value ="30000">
+			<div id = "yearsSubtitle" class="chartSubtitle">By starting income</div>
 		</div>
 	</div>
 

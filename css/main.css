@@ -10,7 +10,6 @@ body{
 }
 .controlContainer.capAtStandardRepayment{
   width: 318px;
-  margin-top: 16px;
 }
 #repaymentChart, #yearsChart{
 	float: left;
@@ -228,7 +227,7 @@ p{
   bottom: 10px;
   z-index: 100;
   color: #1696d2;
-  left: calc(50% - 110px);
+  left: calc(50% - 160px);
   cursor: pointer;
   font-size: 18px;
   font-weight: bold;
@@ -285,6 +284,7 @@ p{
   margin-bottom: 35px;
   font-weight: bold;
   font-size: 14px;
+  text-transform: uppercase;
 }
 #buttons{
   width: 100%;
@@ -299,6 +299,14 @@ p{
   margin-left: 15px;
   cursor: pointer;
   vertical-align: top;
+  position: relative;
+}
+.currentLaw{
+  position: absolute;
+  bottom: -17px;
+  left: 0px;
+  font-style: italic;
+  color: #848081;
 }
 #buttonLabel{
   color: #848081;
@@ -318,13 +326,21 @@ p{
     position: relative;
     margin-bottom: 30px;
 }
+.chartSubtitle{
+  font-size: 14px;
+  font-weight: normal;
+  position: absolute;
+  left: 0px;
+  top: 25px;
+}
 .chartTitle div{
 	display: inline-block;
 }
 .chartTitle .valLabel{
 	width: 100px;
-    text-align: center;
-    /*color: #1696d2;*/
+  text-align: left;
+  margin-left: 1px;
+  color: #1696d2;
 }
 .chartTitle input{
 	position: absolute !important;
@@ -332,10 +348,10 @@ p{
     width: 100px;
 }
 #loanAmount{
-	left: 239px;
+	left: 224px;
 }
 #loanAmount2{
-	left: 186px;
+	left: 169px;
 }
 
 
@@ -360,7 +376,7 @@ p{
 }
 
 .controlContainer .valLabel{
-  text-align: right;
+  text-align: left;
   border: none;
   border-bottom: 2px solid #d2d2d2;
   background: #ffffff;
@@ -374,15 +390,20 @@ p{
 }
 
 .controlContainer.percentDiscretionaryAGI .valLabel{
-  width: 51px;
+  width: 36px;
   padding-right: 16px;
 }
 .controlContainer.minPayment .valLabel{
   width: 47px;
+  margin-top: 17px;
   padding-right: 0px;
+}
+#minPayment, #forgivenessPeriod{
+  margin-top: 17px;
 }
 .controlContainer.forgivenessPeriod .valLabel{
   padding-right: 42px;
+  margin-top: 17px;
 }
 .controlContainer .valLabel.disabled{
   border: none;
@@ -412,10 +433,11 @@ p{
 	font-size: 14px;
 	font-weight: bold;
 	margin-left: -8px;
+  left: 16px;
 }
 .controlContainer.minPayment .valLabel{
 	text-align: left;
-	padding-left: 13px;
+	padding-left: 9px;
 }
 .controlContainer .label{
 	font-weight: bold;
@@ -434,7 +456,7 @@ p{
 }
 #capLabel{
     font-size: 14px;
-    font-weight: normal;
+    font-weight: bold;
     display: inline-block;
     width: 280px;
     top: -2px;
@@ -465,6 +487,8 @@ input[type=number]::-webkit-outer-spin-button {
   position: relative;
   padding-left: 1.95em;
   cursor: pointer;
+  left: 30px;
+  top: 30px;
 }
 
 /* checkbox aspect */

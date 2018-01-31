@@ -254,7 +254,7 @@ function buildRepaymentChart(){
 
 		y.domain([
 			0,
-			150000
+			50000
 		]);
 
 
@@ -301,7 +301,7 @@ function buildRepaymentChart(){
 		  		return y(d[0]["totalStandardRepayment"]) - 6
 		  	})
 		  	.attr("x", (width - 136)*.5)
-		  	.text("Standard 10 year plan")
+		  	.text("Standard 10-year plan")
 	})
 
 }
@@ -325,7 +325,15 @@ function updateRepaymentChart(){
 
 	buildRepaymentData(function(data){
 		x.domain(d3.extent(data, function(d) { return d.agi; }));
-		var yMax = (d3.max(data, function(d){ return d.npv}) >= 150000) ? 230000 : 150000;
+		var yMax;
+		if(d3.max(data, function(d){ return d.npv}) >= 150000){
+			yMax = 230000;
+		}
+		else if (d3.max(data, function(d){ return d.npv}) <= 50000){
+			yMax = 50000;
+		}else{
+			yMax = 160000;
+		}
 		y.domain([
 			0,
 			yMax
@@ -572,7 +580,21 @@ function updateCharts(){
 d3.selectAll("#percentDiscretionaryAGI").on("input", function(){
 	PREV_DATA = {}
 	var val = $(this).val()
+	if (val == 1) { $(this.parentNode).find(".valLabel").css("width","43px") }
+	else if(val >= .1){ $(this.parentNode).find(".valLabel").css("width","36px") }
+	else{ $(this.parentNode).find(".valLabel").css("width","26px") }
 	$(this.parentNode).find(".valLabel").val(parseInt(val*100))
+	updateCharts()
+})
+d3.selectAll(".controlContainer.percentDiscretionaryAGI .valLabel").on("input", function(){
+	PREV_DATA = {}
+	var val = parseInt($(this).val()),
+		max = parseInt($(this).attr("max")),
+		min = parseInt($(this).attr("min"))
+	if(val > max){ val = max }
+	if(val < min){ val = min }
+	$(this).val(val)
+	$(this.parentNode).find(".controlSlider").val(parseFloat(val/100.0))
 	updateCharts()
 })
 
@@ -582,12 +604,37 @@ d3.selectAll("#forgivenessPeriod").on("input", function(){
 	$(this.parentNode).find(".valLabel").val(parseInt(val))
 	updateCharts()
 })
+d3.selectAll(".controlContainer.forgivenessPeriod .valLabel").on("input", function(){
+	PREV_DATA = {}
+	var val = parseInt($(this).val()),
+		max = parseInt($(this).attr("max")),
+		min = parseInt($(this).attr("min"))
+	if(val > max){ val = max }
+	if(val < min){ val = min }
+	$(this).val(val)
+	$(this.parentNode).find(".controlSlider").val(parseFloat(val))
+	updateCharts()
+})
+
 d3.selectAll("#minPayment").on("input", function(){
 	PREV_DATA = {}
 	var val = $(this).val()
 	$(this.parentNode).find(".valLabel").val(parseInt(val))
 	updateCharts()
 })
+d3.selectAll(".controlContainer.minPayment .valLabel").on("input", function(){
+	PREV_DATA = {}
+	var val = parseInt($(this).val()),
+		max = parseInt($(this).attr("max")),
+		min = parseInt($(this).attr("min"))
+	if(val > max){ val = max }
+	if(val < min){ val = min }
+	$(this).val(val)
+	$(this.parentNode).find(".controlSlider").val(parseFloat(val))
+	updateCharts()
+})
+
+
 d3.selectAll("#loanAmount").on("input", function(){
 	PREV_DATA = {}
 	var formatter = d3.format("$,.0f")
