@@ -235,7 +235,7 @@ function buildRepaymentChart(){
 	var w = 500;
 	var h = 500;
 	var svg = d3.select("#repaymentChart").append("svg").attr("width", w).attr("height",h),
-	    margin = {top: 20, right: 80, bottom: 30, left: 60},
+	    margin = {top: 50, right: 80, bottom: 60, left: 60},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom,
 	    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -268,11 +268,21 @@ function buildRepaymentChart(){
 		var axis = g.append("g")
 		  .attr("class", "axis axis--y")
 		  .call(d3.axisLeft(y).tickSize(-width).tickFormat(DOLLARS))
-		axis.append("text")
-		  .attr("transform", "rotate(-90)")
-		  .attr("y", 6)
-		  .attr("dy", "0.71em")
-		  .attr("fill", "#000")
+
+		g.append("text")
+			.attr("class", "axisLabel")
+			.attr("x",-50)
+			.attr("y", -17)
+			.attr("text-anchor","start")
+			.text("Net present dollars")
+			
+		g.append("text")
+			.attr("class", "axisLabel")
+			.attr("x",width/2)
+			.attr("y", height + 40)
+			.attr("text-anchor","middle")
+			.text("Starting income")
+
 
 		axis.selectAll(".tick text").attr("x", -6)
 		axis.selectAll(".tick line").style("opacity", function(d){ return (d==0) ? 0 : 1})
@@ -311,7 +321,7 @@ function updateRepaymentChart(){
 
 	var w = 500;
 	var h = 500;
-	var	margin = {top: 20, right: 80, bottom: 30, left: 60},
+	var	margin = {top: 50, right: 80, bottom: 60, left: 60},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom;
 
@@ -391,7 +401,7 @@ function buildYearsChart(){
 	var w = 500; //should be diff than yrs, bc margins diff
 	var h = 500;
 	var svg = d3.select("#yearsChart").append("svg").attr("width", w).attr("height",h),
-	    margin = {top: 20, right: 80, bottom: 30, left: 20},
+	    margin = {top: 50, right: 80, bottom: 60, left: 20},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom,
 	    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -424,6 +434,21 @@ function buildYearsChart(){
 		var axis = g.append("g")
 		  .attr("class", "axis axis--y")
 		  .call(d3.axisLeft(y).tickSize(-width))
+
+		g.append("text")
+			.attr("class", "axisLabel")
+			.attr("x",-20)
+			.attr("y", -15)
+			.attr("text-anchor","start")
+			.text("Years")
+
+		g.append("text")
+			.attr("class", "axisLabel")
+			.attr("x",width/2)
+			.attr("y", height + 40)
+			.attr("text-anchor","middle")
+			.text("Starting income")
+
 		axis.append("text")
 		  .attr("transform", "rotate(-90)")
 		  .attr("y", 6)
@@ -447,7 +472,7 @@ function updateYearsChart(){
 
 	var w = 500;
 	var h = 500;
-	var	margin = {top: 20, right: 80, bottom: 30, left: 20},
+	var	margin = {top: 50, right: 80, bottom: 60, left: 20},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom;
 
