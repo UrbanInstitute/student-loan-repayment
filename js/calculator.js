@@ -219,9 +219,9 @@ function buildRepaymentData(callback){
 	var data = []
 	var opts = buildOpts();
 
-	if(opts.forgivenessPeriod == MAX_YEARS){ disableForgiveness(opts.forgivenessPeriod) }
+	if(opts.forgivenessPeriod == MAX_YEARS){ disableForgiveness(true) }
 	else{ enableForgiveness(opts.forgivenessPeriod) }
-	if(opts.capAtStandardRepayment){ disableForgiveness(opts.forgivenessPeriod) }
+	if(opts.capAtStandardRepayment){ disableForgiveness(false) }
 	else{ enableForgiveness(opts.forgivenessPeriod) }
 
 	for(var agi = 5000; agi <= 120000; agi += 500){
@@ -539,16 +539,16 @@ function buildGradient(){
       .attr("fill", "url(#gradient)")
 }
 
-function disableForgiveness(years){
-	d3.select("#forgivenessPeriod").classed("disabled", true)
-	d3.select(".controlContainer.forgivenessPeriod .valLabel").classed("disabled", true)
-	d3.select(".controlContainer.forgivenessPeriod .suffix").classed("disabled", true)
+function disableForgiveness(maxYear){
+	d3.select("#forgivenessPeriod").classed("disabled", !maxYear)
+	d3.select(".controlContainer.forgivenessPeriod .valLabel").classed("disabled", !maxYear)
+	d3.select(".controlContainer.forgivenessPeriod .suffix").classed("disabled", !maxYear)
 	d3.select("#noForgiveness").classed("disabled", true)
 	$("#forgivenessPeriod").val(50)
 	$("#forgivenessPeriodLabel").val(50)
 }
 function enableForgiveness(years){
-	if(years == 50){ return false}
+	if(years == MAX_YEARS){ return false}
 	d3.select("#forgivenessPeriod").classed("disabled", false)
 	d3.select(".controlContainer.forgivenessPeriod .valLabel").classed("disabled", false)
 	d3.select(".controlContainer.forgivenessPeriod .suffix").classed("disabled", false)
@@ -593,8 +593,11 @@ function buildCharts(){
 	buildAllData();
 	buildGradient();
 }
-function updateCharts(){
-	d3.selectAll(".button.clicked").classed("clicked", false)
+function updateCharts(disabled){
+	console.log(disabled)
+	if(typeof(disabled) == "undefined" || !disabled){
+		d3.selectAll(".button.clicked").classed("clicked", false)
+	}
 	updateRepaymentChart();
 	updateYearsChart();
 	buildAllData();
@@ -625,31 +628,35 @@ d3.selectAll(".controlContainer.percentDiscretionaryAGI .valLabel").on("input", 
 	if(val < min){ val = min }
 	$(this).val(val)
 	$(this.parentNode).find(".controlSlider").val(parseFloat(val/100.0))
-	updateCharts()
+	updateCharts(d3.select("#forgivenessPeriod").classed("disabled"))
 })
 
 d3.selectAll("#forgivenessPeriod").on("input", function(){
 	PREV_DATA = {}
 	var val = $(this).val()
-	if (val < 10) { $(this.parentNode).find(".valLabel").css("width","53px") }
-	else{ $(this.parentNode).find(".valLabel").css("width","61px") }
+	if( ! d3.select("#forgivenessPeriod").classed("disabled") ){
+		if (val < 10) { $(this.parentNode).find(".valLabel").css("width","53px") }
+		else{ $(this.parentNode).find(".valLabel").css("width","61px") }
 
-	if(val == 1){ d3.select(".suffix.years").text("year")}
-	else{ d3.select(".suffix.years").text("years")}
+		if(val == 1){ d3.select(".suffix.years").text("year")}
+		else{ d3.select(".suffix.years").text("years")}
+	}
 
 	$(this.parentNode).find(".valLabel").val(parseInt(val))
-	updateCharts()
+	updateCharts(d3.select("#forgivenessPeriod").classed("disabled"))
 })
 d3.selectAll(".controlContainer.forgivenessPeriod .valLabel").on("input", function(){
 	PREV_DATA = {}
 	var val = parseInt($(this).val()),
 		max = parseInt($(this).attr("max")),
 		min = parseInt($(this).attr("min"))
-	if (val < 10) { $(this.parentNode).find(".valLabel").css("width","53px") }
-	else{ $(this.parentNode).find(".valLabel").css("width","61px") }
+	if( ! d3.select("#forgivenessPeriod").classed("disabled") ){
+		if (val < 10) { $(this.parentNode).find(".valLabel").css("width","53px") }
+		else{ $(this.parentNode).find(".valLabel").css("width","61px") }
 
-	if(val == 1){ d3.select(".suffix.years").text("year")}
-	else{ d3.select(".suffix.years").text("years")}
+		if(val == 1){ d3.select(".suffix.years").text("year")}
+		else{ d3.select(".suffix.years").text("years")}
+	}
 
 	if(val > max){ val = max }
 	if(val < min){ val = min }
