@@ -129,7 +129,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         <div class = "button" id = "repayeGrad">REPAYE graduate<div class = "currentLaw">current law</div></div>
         <div class = "button" id = "repayePSLF">REPAYE with PSLF<div class = "currentLaw">current law</div></div>
-        <div class = "button" id = "prosper">PROSPER Act proposal</div>
+        <div class = "button" id = "prosper">PROSPER Act<div class = "currentLaw">proposal</div></div>
       </div>
 
     	<div id = "sliders">
@@ -148,12 +148,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 			<div class = "controlContainer forgivenessPeriod">
 				<div class = "label">Forgiveness period</div>
 				<input id = "forgivenessPeriod" class = "controlSlider" type="range" min="0" max="50" step="1" value ="20">
-				<input id = "forgivenessPeriodLabel" type = "number" class = "valLabel" value = "20" min = "0" max = "50"><span class = "suffix">years</span>
+				<input id = "forgivenessPeriodLabel" type = "number" class = "valLabel" value = "20" min = "0" max = "50"><span class = "suffix years">years</span>
 				<div id = "noForgiveness">No forgiveness period</div>
 			</div>
 			<div class = "controlContainer capAtStandardRepayment">
-		    	<input type="checkbox" id="capAtStandardRepayment" value="cap">
+		    	<!-- <input type="checkbox" id="capAtStandardRepayment" value="cap"> -->
 				<label for="capAtStandardRepayment"></label><div id = "capLabel">Limit total amount paid to amount repaid under 10-year plan</div>
+        <div class = "switch off" id="capAtStandardRepayment" ></div>
+
 			</div>
 		</div>
 	</div>
@@ -175,6 +177,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 			<div id = "yearsSubtitle" class="chartSubtitle">By starting income</div>
 		</div>
 	</div>
+  <div id = "notes"><strong>Notes:</strong>Doner salami spare ribs cow. Shankle meatball beef ribs alcatra tenderloin strip steak. Alcatra swine fatback, buffalo meatloaf corned beef pig turkey beef ham cupim picanha spare ribs bacon brisket. Sausage capicola beef, meatball ground round spare ribs pork chop. Kevin fatback picanha flank shankle short loin turkey turducken brisket leberkas spare ribs. Short loin jowl landjaeger porchetta capicola fatback meatball, bacon sirloin tenderloin brisket prosciutto. Andouille flank leberkas swine, spare ribs strip steak ribeye t-bone.</div>
 
 	<div id = "downloadData"><a>Download data</a></div>
 </div>

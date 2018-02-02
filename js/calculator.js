@@ -22,7 +22,7 @@ function getInputs(){
 	inputs.percentDiscretionaryAGI = parseFloat($("#percentDiscretionaryAGI").val())
 	inputs.forgivenessPeriod = parseFloat($("#forgivenessPeriod").val())
 	inputs.loanAmount = parseFloat($("#loanAmount").val())
-	inputs.capAtStandardRepayment = document.getElementById("capAtStandardRepayment").checked;
+	inputs.capAtStandardRepayment = d3.select("#capAtStandardRepayment").classed("on");
 	inputs.minPayment = parseFloat($("#minPayment").val());
 
 	return inputs;
@@ -235,7 +235,7 @@ function buildRepaymentChart(){
 	var w = 500;
 	var h = 500;
 	var svg = d3.select("#repaymentChart").append("svg").attr("width", w).attr("height",h),
-	    margin = {top: 50, right: 80, bottom: 60, left: 60},
+	    margin = {top: 30, right: 80, bottom: 60, left: 60},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom,
 	    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -271,11 +271,11 @@ function buildRepaymentChart(){
 
 		g.append("text")
 			.attr("class", "axisLabel")
-			.attr("x",-50)
+			.attr("x",-60)
 			.attr("y", -17)
 			.attr("text-anchor","start")
 			.text("Net present dollars")
-			
+
 		g.append("text")
 			.attr("class", "axisLabel")
 			.attr("x",width/2)
@@ -321,7 +321,7 @@ function updateRepaymentChart(){
 
 	var w = 500;
 	var h = 500;
-	var	margin = {top: 50, right: 80, bottom: 60, left: 60},
+	var	margin = {top: 30, right: 80, bottom: 60, left: 60},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom;
 
@@ -401,7 +401,7 @@ function buildYearsChart(){
 	var w = 500; //should be diff than yrs, bc margins diff
 	var h = 500;
 	var svg = d3.select("#yearsChart").append("svg").attr("width", w).attr("height",h),
-	    margin = {top: 50, right: 80, bottom: 60, left: 20},
+	    margin = {top: 30, right: 80, bottom: 60, left: 20},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom,
 	    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -472,7 +472,7 @@ function updateYearsChart(){
 
 	var w = 500;
 	var h = 500;
-	var	margin = {top: 50, right: 80, bottom: 60, left: 20},
+	var	margin = {top: 30, right: 80, bottom: 60, left: 20},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom;
 
@@ -572,7 +572,8 @@ function setPlan(o, id){
 		}
 		if(o["capAtStandardRepayment"] != null){
 			var val = o["capAtStandardRepayment"]
-			$("#capAtStandardRepayment").prop("checked", val)
+			d3.select("#capAtStandardRepayment").classed("on", val)
+			d3.select("#capAtStandardRepayment").classed("off", !val)
 		}
 	}
 	// $("#percentDiscretionaryAGI").val(percentDiscretionaryAGI)
@@ -605,7 +606,7 @@ function updateCharts(){
 d3.selectAll("#percentDiscretionaryAGI").on("input", function(){
 	PREV_DATA = {}
 	var val = $(this).val()
-	if (val == 1) { $(this.parentNode).find(".valLabel").css("width","43px") }
+	if (val >= 1) { $(this.parentNode).find(".valLabel").css("width","43px") }
 	else if(val >= .1){ $(this.parentNode).find(".valLabel").css("width","36px") }
 	else{ $(this.parentNode).find(".valLabel").css("width","26px") }
 	$(this.parentNode).find(".valLabel").val(parseInt(val*100))
@@ -616,6 +617,10 @@ d3.selectAll(".controlContainer.percentDiscretionaryAGI .valLabel").on("input", 
 	var val = parseInt($(this).val()),
 		max = parseInt($(this).attr("max")),
 		min = parseInt($(this).attr("min"))
+	if (val >= 100) { $(this.parentNode).find(".valLabel").css("width","43px") }
+	else if(val >= 10){ $(this.parentNode).find(".valLabel").css("width","36px") }
+	else{ $(this.parentNode).find(".valLabel").css("width","26px") }
+
 	if(val > max){ val = max }
 	if(val < min){ val = min }
 	$(this).val(val)
@@ -626,6 +631,12 @@ d3.selectAll(".controlContainer.percentDiscretionaryAGI .valLabel").on("input", 
 d3.selectAll("#forgivenessPeriod").on("input", function(){
 	PREV_DATA = {}
 	var val = $(this).val()
+	if (val < 10) { $(this.parentNode).find(".valLabel").css("width","53px") }
+	else{ $(this.parentNode).find(".valLabel").css("width","61px") }
+
+	if(val == 1){ d3.select(".suffix.years").text("year")}
+	else{ d3.select(".suffix.years").text("years")}
+
 	$(this.parentNode).find(".valLabel").val(parseInt(val))
 	updateCharts()
 })
@@ -634,6 +645,12 @@ d3.selectAll(".controlContainer.forgivenessPeriod .valLabel").on("input", functi
 	var val = parseInt($(this).val()),
 		max = parseInt($(this).attr("max")),
 		min = parseInt($(this).attr("min"))
+	if (val < 10) { $(this.parentNode).find(".valLabel").css("width","53px") }
+	else{ $(this.parentNode).find(".valLabel").css("width","61px") }
+
+	if(val == 1){ d3.select(".suffix.years").text("year")}
+	else{ d3.select(".suffix.years").text("years")}
+
 	if(val > max){ val = max }
 	if(val < min){ val = min }
 	$(this).val(val)
@@ -644,6 +661,11 @@ d3.selectAll(".controlContainer.forgivenessPeriod .valLabel").on("input", functi
 d3.selectAll("#minPayment").on("input", function(){
 	PREV_DATA = {}
 	var val = $(this).val()
+
+	if (val >= 100) { $(this.parentNode).find(".valLabel").css("width","41px") }
+	else if(val >= 10){ $(this.parentNode).find(".valLabel").css("width","34px") }
+	else{ $(this.parentNode).find(".valLabel").css("width","24px") }
+
 	$(this.parentNode).find(".valLabel").val(parseInt(val))
 	updateCharts()
 })
@@ -652,6 +674,11 @@ d3.selectAll(".controlContainer.minPayment .valLabel").on("input", function(){
 	var val = parseInt($(this).val()),
 		max = parseInt($(this).attr("max")),
 		min = parseInt($(this).attr("min"))
+
+	if (val >= 100) { $(this.parentNode).find(".valLabel").css("width","41px") }
+	else if(val >= 10){ $(this.parentNode).find(".valLabel").css("width","34px") }
+	else{ $(this.parentNode).find(".valLabel").css("width","24px") }
+
 	if(val > max){ val = max }
 	if(val < min){ val = min }
 	$(this).val(val)
@@ -680,10 +707,25 @@ d3.selectAll("#loanAmount2").on("input", function(){
 	$("#loanAmount").val(val)
 	updateCharts()
 })
-d3.selectAll("#capAtStandardRepayment").on("change", function(){
-	PREV_DATA = {}
-	updateCharts()	
+// d3.selectAll("#capAtStandardRepayment").on("change", function(){
+// 	PREV_DATA = {}
+// 	updateCharts()	
+// })
+
+
+d3.select(".switch")
+.on("click", function(){
+PREV_DATA = {}
+if(d3.select(this).classed("on")){
+d3.select(this).classed("on", false)
+d3.select(this).classed("off", true)
+}else{
+d3.select(this).classed("on", true)
+d3.select(this).classed("off", false)
+}
+updateCharts();
 })
+
 
 d3.select("#repayeUndergrad").on("click", function(){
 	PREV_DATA = {}
@@ -707,12 +749,13 @@ d3.select("#prosper").on("click", function(){
 })
 
 d3.select("#clickToExpand").on("click", function(){
+	var full_height = $("#topText")[0].scrollHeight
 	if(d3.select(this).classed("closed")){
 		d3.select(this).classed("closed", false)
 			.text("Click to Hide")
 		d3.select("#topText")
 			.transition()
-			.style("height", "1000px")
+			.style("height", full_height + "px")
 		d3.select("#gradientHolder")
 			.transition()
 			.style("opacity",0)
