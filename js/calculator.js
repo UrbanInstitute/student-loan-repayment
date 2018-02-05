@@ -53,11 +53,11 @@ function getNPV(agi, year, opts){
 	if(minAnnualPayment > inc){
 		incPay = minAnnualPayment;
 	}else{
-		if(opts.standardRepayment < inc){
-			incPay = opts.standardRepayment
-		}else{
+		// if(opts.standardRepayment < inc && opts.capAtStandardRepayment){
+			// incPay = opts.standardRepayment
+		// }else{
 			incPay = inc;
-		}
+		// }
 	}
 	var prevBalance = (year == 0) ? loanAmount : PREV_DATA[agi]["balance"][year - 1];
 	var balance = prevBalance * (1+(opts.interestRate)) - incPay
@@ -108,7 +108,7 @@ function getNPV(agi, year, opts){
 		yearlyUnbounded = (balance > 0) ? incPay : incPay + balance;
 		yearlyPayment = (yearlyUnbounded < 0) ? 0 : yearlyUnbounded;
 	}
-
+	if(agi == 100000){ console.log(yearlyPayment, yearlyUnbounded)}
 
 	var NPV = yearlyPayment / Math.pow(1+opts.discountRate, year+1)
 
@@ -160,8 +160,11 @@ function getYearsToRepay(agi){
 	
 
 	for(var i = 0; i < yearMax; i++){
+
 		var npv = getNPV(agi, i, opts)[0]
 		var balance = getNPV(agi, i, opts)[1]
+
+
 		if(npv <= .1 && balance <= .1){
 			return i;
 		}
