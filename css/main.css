@@ -280,6 +280,9 @@ p{
   width: 810px;
   padding-left: 40px;
 }
+#notes span{
+  display: block;
+}
 
 /********************************************************/
 /******************* CONTROLS ***************************/
@@ -809,12 +812,23 @@ input.triangle[type=range]:focus::-ms-fill-upper {
 }
 
 
-
+#isMobile, #isPhone{
+  display: none;
+  position: fixed;
+  width: 0px;
+  height: 0px;
+  top: 0px;
+  left: 0px;
+  pointer-events: none;
+}
 
 /***************************************************************************/
 /******************** MOBILE *******************/
 /***************************************************************************/
 @media(max-width: 1200px){
+  #isMobile{
+    display: block;
+  }
   #controls{
     width: 768px;
   }
@@ -861,12 +875,23 @@ input.triangle[type=range]:focus::-ms-fill-upper {
     margin: 0 auto;
     float: none;
     display: block;
-    width: 450px;
+    width: 700px;
     margin-top: 32px;
 
   }
   #notes{
-    width: 370px;
+    width: 560px;
   }
 }
 
+/***************************************************************************/
+/******************** PHONE *******************/
+/***************************************************************************/
+@media(max-width: 768px){
+  #isMobile{
+    display: none;
+  }
+  #isPhone{
+    display: block;
+  }
+}

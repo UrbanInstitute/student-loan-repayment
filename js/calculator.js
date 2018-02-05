@@ -3,6 +3,13 @@ var PREV_DATA = {}
 var DOLLARS = d3.format("$,.0f")
 var MAX_YEARS = 50;
 
+function IS_MOBILE(){
+	return d3.select("#isMobile").style("display") == "block";
+}
+function IS_PHONE(){
+	return d3.select("#isPhone").style("display") == "block";
+}
+
 function getGlobals(){
 	var globals = {}
 	globals.standardYears = 10;
@@ -108,7 +115,6 @@ function getNPV(agi, year, opts){
 		yearlyUnbounded = (balance > 0) ? incPay : incPay + balance;
 		yearlyPayment = (yearlyUnbounded < 0) ? 0 : yearlyUnbounded;
 	}
-	if(agi == 100000){ console.log(yearlyPayment, yearlyUnbounded)}
 
 	var NPV = yearlyPayment / Math.pow(1+opts.discountRate, year+1)
 
@@ -235,8 +241,13 @@ function buildRepaymentData(callback){
 
 }
 function buildRepaymentChart(){
-	var w = 500;
-	var h = 500;
+	var w, h;
+	if (IS_MOBILE()){ w = 700}
+	else if(IS_PHONE()){ w = 300}
+	else{ w = 500 }
+	h = 500
+
+
 	var svg = d3.select("#repaymentChart").append("svg").attr("width", w).attr("height",h),
 	    margin = {top: 30, right: 80, bottom: 60, left: 60},
 	    width = w - margin.left - margin.right,
@@ -322,8 +333,12 @@ function buildRepaymentChart(){
 function updateRepaymentChart(){
 	var svg = d3.select("#repaymentChart").select("svg")
 
-	var w = 500;
-	var h = 500;
+	var w, h;
+	if (IS_MOBILE()){ w = 700}
+	else if(IS_PHONE()){ w = 300}
+	else{ w = 500 }
+	h = 500
+
 	var	margin = {top: 30, right: 80, bottom: 60, left: 60},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom;
@@ -401,8 +416,12 @@ function buildYearsData(callback){
 
 }
 function buildYearsChart(){
-	var w = 500; //should be diff than yrs, bc margins diff
-	var h = 500;
+	var w, h;
+	if (IS_MOBILE()){ w = 700}
+	else if(IS_PHONE()){ w = 300}
+	else{ w = 500 }
+	h = 500
+
 	var svg = d3.select("#yearsChart").append("svg").attr("width", w).attr("height",h),
 	    margin = {top: 30, right: 80, bottom: 60, left: 20},
 	    width = w - margin.left - margin.right,
@@ -473,8 +492,12 @@ function buildYearsChart(){
 function updateYearsChart(){
 	var svg = d3.select("#yearsChart").select("svg")
 
-	var w = 500;
-	var h = 500;
+	var w, h;
+	if (IS_MOBILE()){ w = 700}
+	else if(IS_PHONE()){ w = 300}
+	else{ w = 500 }
+	h = 500
+
 	var	margin = {top: 30, right: 80, bottom: 60, left: 20},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom;
