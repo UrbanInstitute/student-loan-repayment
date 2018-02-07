@@ -1,6 +1,7 @@
 var PREV_BALANCE;
 var PREV_DATA = {}
 var DOLLARS = d3.format("$,.0f")
+var SHORT_DOLLARS = d3.format("$.0s")
 var MAX_YEARS = 50;
 
 function IS_MOBILE(){
@@ -247,9 +248,12 @@ function buildRepaymentChart(){
 	else{ w = 500 }
 	h = 500
 
+	var formatter = (IS_PHONE()) ? SHORT_DOLLARS : DOLLARS;
+	var marginLeft = (IS_PHONE()) ? 40 : 60;
+	var marginRight = (IS_PHONE()) ? 20 : 80;
 
 	var svg = d3.select("#repaymentChart").append("svg").attr("width", w).attr("height",h),
-	    margin = {top: 30, right: 80, bottom: 60, left: 60},
+	    margin = {top: 30, right: marginRight, bottom: 60, left: marginLeft},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom,
 	    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -275,13 +279,13 @@ function buildRepaymentChart(){
 		var xAx = g.append("g")
 		  .attr("class", "axis axis--x")
 		  .attr("transform", "translate(0," + height + ")")
-		  .call(d3.axisBottom(x).tickFormat(DOLLARS).tickValues([0,20000,40000,60000,80000,100000,120000]));
+		  .call(d3.axisBottom(x).tickFormat(formatter).tickValues([0,20000,40000,60000,80000,100000,120000]));
 		xAx.selectAll(".tick text").attr("x", function(d){ return (d == 0) ? 15 : 0})
 		xAx.selectAll(".tick line").attr("opacity", function(d){ return (d == 0) ? 0 : 1})
 
 		var axis = g.append("g")
 		  .attr("class", "axis axis--y")
-		  .call(d3.axisLeft(y).tickSize(-width).tickFormat(DOLLARS))
+		  .call(d3.axisLeft(y).tickSize(-width).tickFormat(formatter))
 
 		g.append("text")
 			.attr("class", "axisLabel")
@@ -291,7 +295,7 @@ function buildRepaymentChart(){
 			.text("Net present dollars")
 
 		g.append("text")
-			.attr("class", "axisLabel")
+			.attr("class", "axisLabel xLabel")
 			.attr("x",width/2)
 			.attr("y", height + 40)
 			.attr("text-anchor","middle")
@@ -333,13 +337,18 @@ function buildRepaymentChart(){
 function updateRepaymentChart(){
 	var svg = d3.select("#repaymentChart").select("svg")
 
+	var formatter = (IS_PHONE()) ? SHORT_DOLLARS : DOLLARS;
+
+	var marginLeft = (IS_PHONE()) ? 40 : 60;
+	var marginRight = (IS_PHONE()) ? 20 : 80;
+
 	var w, h;
 	if (IS_MOBILE()){ w = 700}
 	else if(IS_PHONE()){ w = 300}
 	else{ w = 500 }
 	h = 500
 
-	var	margin = {top: 30, right: 80, bottom: 60, left: 60},
+	var	margin = {top: 30, right: marginRight, bottom: 60, left: marginLeft},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom;
 
@@ -367,12 +376,25 @@ function updateRepaymentChart(){
 			yMax
 		]);
 
+		var xAx = svg.selectAll(".axis.axis--x")
+		  .attr("transform", "translate(0," + height + ")")
+		  .call(d3.axisBottom(x).tickFormat(formatter).tickValues([0,20000,40000,60000,80000,100000,120000]));
+		xAx.selectAll(".tick text").attr("x", function(d){ return (d == 0) ? 15 : 0})
+		xAx.selectAll(".tick line").attr("opacity", function(d){ return (d == 0) ? 0 : 1})
+
+
+		svg.selectAll(".axisLabel.xLabel")
+			.attr("x",width/2)
+			.attr("y", height + 40)
+
+
 		var axis = svg.selectAll(".axis.axis--y")
 			.transition()
-			.call(d3.axisLeft(y).tickSize(-width).tickFormat(DOLLARS))
+			.call(d3.axisLeft(y).tickSize(-width).tickFormat(formatter))
 
 		axis.selectAll(".tick text").attr("x", -6)
 		axis.selectAll(".tick line").style("opacity", function(d){ return (d==0) ? 0 : 1})
+
 
 		svg.selectAll(".repaymentLine.input")
 		  .datum(data)
@@ -382,6 +404,8 @@ function updateRepaymentChart(){
 		svg.selectAll(".repaymentLine.fixed")
 		  .datum(data)
 		  .transition()
+		  .attr("x1", x(5000))
+		  .attr("x2", width)
 		  .attr("y1", function(d){
 		  	return y(d[0]["totalStandardRepayment"])
 		  })
@@ -391,6 +415,7 @@ function updateRepaymentChart(){
 		svg.selectAll("#tenYearLabel")
 			.datum(data)
 			.transition()
+		  	.attr("x", (width - 136)*.5)
 			.attr("y", function(d){
 		  		return y(d[0]["totalStandardRepayment"]) - 6
 		  	})
@@ -416,6 +441,9 @@ function buildYearsData(callback){
 
 }
 function buildYearsChart(){
+	var formatter = (IS_PHONE()) ? SHORT_DOLLARS : DOLLARS;
+	var marginRight = (IS_PHONE()) ? 20 : 80;
+
 	var w, h;
 	if (IS_MOBILE()){ w = 700}
 	else if(IS_PHONE()){ w = 300}
@@ -423,7 +451,7 @@ function buildYearsChart(){
 	h = 500
 
 	var svg = d3.select("#yearsChart").append("svg").attr("width", w).attr("height",h),
-	    margin = {top: 30, right: 80, bottom: 60, left: 20},
+	    margin = {top: 30, right: marginRight, bottom: 60, left: 20},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom,
 	    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -449,7 +477,7 @@ function buildYearsChart(){
 		var xAx = g.append("g")
 		  .attr("class", "axis axis--x")
 		  .attr("transform", "translate(0," + height + ")")
-		  .call(d3.axisBottom(x).tickFormat(DOLLARS).tickValues([0,20000,40000,60000,80000,100000,120000]));
+		  .call(d3.axisBottom(x).tickFormat(formatter).tickValues([0,20000,40000,60000,80000,100000,120000]));
 		xAx.selectAll(".tick text").attr("x", function(d){ return (d == 0) ? 15 : 0})
 		xAx.selectAll(".tick line").attr("opacity", function(d){ return (d == 0) ? 0 : 1})
 
@@ -465,7 +493,7 @@ function buildYearsChart(){
 			.text("Years")
 
 		g.append("text")
-			.attr("class", "axisLabel")
+			.attr("class", "axisLabel xLabel")
 			.attr("x",width/2)
 			.attr("y", height + 40)
 			.attr("text-anchor","middle")
@@ -491,14 +519,16 @@ function buildYearsChart(){
 }
 function updateYearsChart(){
 	var svg = d3.select("#yearsChart").select("svg")
+	var formatter = (IS_PHONE()) ? SHORT_DOLLARS : DOLLARS;
 
+	var marginRight = (IS_PHONE()) ? 20 : 80;
 	var w, h;
 	if (IS_MOBILE()){ w = 700}
 	else if(IS_PHONE()){ w = 300}
 	else{ w = 500 }
 	h = 500
 
-	var	margin = {top: 30, right: 80, bottom: 60, left: 20},
+	var	margin = {top: 30, right: marginRight, bottom: 60, left: 20},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom;
 
@@ -523,6 +553,18 @@ function updateYearsChart(){
 			.call(d3.axisLeft(y).tickSize(-width))
 		axis.selectAll(".tick text").attr("x", -6)
 		axis.selectAll(".tick line").style("opacity", function(d){ return (d==0) ? 0 : 1})
+
+		var xAx = svg.selectAll(".axis.axis--x")
+		  .attr("transform", "translate(0," + height + ")")
+		  .call(d3.axisBottom(x).tickFormat(formatter).tickValues([0,20000,40000,60000,80000,100000,120000]));
+		xAx.selectAll(".tick text").attr("x", function(d){ return (d == 0) ? 15 : 0})
+		xAx.selectAll(".tick line").attr("opacity", function(d){ return (d == 0) ? 0 : 1})
+
+		svg.selectAll(".axisLabel.xLabel")
+			.attr("x",width/2)
+			.attr("y", height + 40)
+
+
 
 		svg.selectAll(".yearsLine")
 		  .datum(data)
@@ -583,9 +625,6 @@ function enableForgiveness(years){
 }
 
 function setPlan(o, id){
-	// var dfd = $.Deferred();
-	// dfd.done()
-		// .
 	var elems = ["percentDiscretionaryAGI", "forgivenessPeriod", "minPayment"]
 	for(var i =0; i < elems.length; i++){
 		var el = elems[i]
@@ -593,6 +632,20 @@ function setPlan(o, id){
 
 		if(o[el] != null){
 			var val = o[el]
+			if(el == "percentDiscretionaryAGI"){
+				if (val >= 1) { $(".controlContainer." + el).find(".valLabel").css("width","43px") }
+				else if(val >= .1){ $(".controlContainer." + el).find(".valLabel").css("width","36px") }
+				else{ $(".controlContainer." + el).find(".valLabel").css("width","26px") }
+			}
+			else if(el == "forgivenessPeriod"){
+				if (val < 10) { $(".controlContainer." + el).find(".valLabel").css("width","53px") }
+				else{ $(".controlContainer." + el).find(".valLabel").css("width","61px") }			
+			}
+			else if(el == "minPayment"){
+				if (val >= 100) { $(".controlContainer." + el).find(".valLabel").css("width","41px") }
+				else if(val >= 10){ $(".controlContainer." + el).find(".valLabel").css("width","34px") }
+				else{ $(".controlContainer." + el).find(".valLabel").css("width","24px") }	
+			}
 			$(".controlContainer." + el).find(".valLabel").val(parseInt(val*mult))
 			$(".controlContainer." + el).find(".controlSlider").val(val)
 		}
@@ -602,13 +655,8 @@ function setPlan(o, id){
 			d3.select("#capAtStandardRepayment").classed("off", !val)
 		}
 	}
-	// $("#percentDiscretionaryAGI").val(percentDiscretionaryAGI)
-	// console.log(percentDiscretionaryAGI)
-	// $(".controlContainer.percentDiscretionaryAGI").find(".valLabel").val(parseInt(percentDiscretionaryAGI*100))
-	
-	// $("#percentDiscretionaryAGI")[0].input()
 	updateCharts();	
-	d3.select("#" + id).classed("clicked", true)
+	d3.select(".button." + id).classed("clicked", true)
 	
 }
 
@@ -620,13 +668,15 @@ function buildCharts(){
 	buildGradient();
 }
 function updateCharts(disabled){
-	console.log(disabled)
 	if(typeof(disabled) == "undefined" || !disabled){
 		d3.selectAll(".button.clicked").classed("clicked", false)
 	}
 	updateRepaymentChart();
 	updateYearsChart();
 	buildAllData();
+}
+function scrollDown(){
+	$("html, body").animate({ scrollTop: $('#controls').offset().top - 80 }, 1000);
 }
 
 
@@ -746,40 +796,48 @@ d3.selectAll("#loanAmount2").on("input", function(){
 // })
 
 
+
 d3.select(".switch")
 .on("click", function(){
-PREV_DATA = {}
-if(d3.select(this).classed("on")){
-d3.select(this).classed("on", false)
-d3.select(this).classed("off", true)
-}else{
-d3.select(this).classed("on", true)
-d3.select(this).classed("off", false)
-}
-updateCharts();
+	PREV_DATA = {}
+	if(d3.select(this).classed("on")){
+	d3.select(this).classed("on", false)
+	d3.select(this).classed("off", true)
+	}else{
+	d3.select(this).classed("on", true)
+	d3.select(this).classed("off", false)
+	}
+	updateCharts();
 })
 
 
-d3.select("#repayeUndergrad").on("click", function(){
+d3.selectAll(".repayeUndergrad").on("click", function(){
 	PREV_DATA = {}
+	if(d3.select(this).classed("buttonLink")){ scrollDown()}
 	var o = {"percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":20,"capAtStandardRepayment":false, "loanAmount": null}
 	setPlan(o, "repayeUndergrad")
 })
-d3.select("#repayeGrad").on("click", function(){
+d3.selectAll(".repayeGrad").on("click", function(){
 	PREV_DATA = {}
+	if(d3.select(this).classed("buttonLink")){ scrollDown()}
 	var o = {"percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":25,"capAtStandardRepayment":false, "loanAmount": null}
 	setPlan(o, "repayeGrad")
 })
-d3.select("#repayePSLF").on("click", function(){
+d3.selectAll(".repayePSLF").on("click", function(){
 	PREV_DATA = {}
+	if(d3.select(this).classed("buttonLink")){ scrollDown()}
 	var o = {"percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":10,"capAtStandardRepayment":false, "loanAmount": null}
 	setPlan(o, "repayePSLF")
 })
-d3.select("#prosper").on("click", function(){
+d3.selectAll(".prosper").on("click", function(){
 	PREV_DATA = {}
+	if(d3.select(this).classed("buttonLink")){ scrollDown()}
 	var o = {"percentDiscretionaryAGI":.15, "minPayment":25, "forgivenessPeriod":50,"capAtStandardRepayment":true, "loanAmount": null}
 	setPlan(o, "prosper")
 })
+
+
+
 
 d3.select("#clickToExpand").on("click", function(){
 	var full_height = $("#topText")[0].scrollHeight
@@ -804,4 +862,22 @@ d3.select("#clickToExpand").on("click", function(){
 
 	}
 })
+
+
+$( window ).resize(function() {
+	d3.select("#topText")
+		.style("height", "0px")
+	var full_height = $("#topText")[0].scrollHeight
+
+	if(! d3.select("#clickToExpand").classed("closed")){
+		d3.select("#topText")
+			.style("height", full_height + "px")
+	}else{
+		d3.select("#topText")
+			.style("height", "400px")		
+	}
+
+	PREV_DATA = {}
+	updateCharts();
+});
 buildCharts()

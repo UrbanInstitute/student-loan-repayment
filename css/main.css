@@ -236,7 +236,10 @@ p{
   text-align: center;
 }
 
-
+.buttonLink{
+  color: #1696d2;
+  cursor: pointer;
+}
 /********************************************************/
 /*********************** CHARTS *************************/
 /********************************************************/
@@ -821,13 +824,24 @@ input.triangle[type=range]:focus::-ms-fill-upper {
   left: 0px;
   pointer-events: none;
 }
-
+.desktopCopy{
+  display: inline-block;
+}
+.mobileCopy{
+  display: none;
+}
 /***************************************************************************/
 /******************** MOBILE *******************/
 /***************************************************************************/
 @media(max-width: 1200px){
   #isMobile{
     display: block;
+  }
+  .desktopCopy{
+    display: none;
+  }
+  .mobileCopy{
+    display: inline-block;
   }
   #controls{
     width: 768px;
@@ -841,7 +855,7 @@ input.triangle[type=range]:focus::-ms-fill-upper {
   .controlContainer{
     width: calc(33% - 95px)
   }
-  #repayeUndergrad{
+  .button.repayeUndergrad{
     margin-left: 53px !important;
   }
   .controlContainer.capAtStandardRepayment, #capLabel{
@@ -880,7 +894,7 @@ input.triangle[type=range]:focus::-ms-fill-upper {
 
   }
   #notes{
-    width: 560px;
+        width: calc(100% - 330px);
   }
 }
 
@@ -894,4 +908,61 @@ input.triangle[type=range]:focus::-ms-fill-upper {
   #isPhone{
     display: block;
   }
+  .chartTitle{
+    font-size: 16px;
+  }
+  #loanAmount{
+    left: 194px;
+  }
+  #loanAmount2 {
+    left: 146px;
+  }
+  #notes{
+    width: 100%;
+    padding-left: 10px;
+  }
+  #downloadData{
+    font-size: 12px;
+    margin-left: 10px;
+    margin-top: 10px;
+    float: none;
+  }
+  #repaymentChart, #yearsChart{
+    width: 320px;
+  }
+  #controls{
+    width: 290px;
+  }
+  #buttonLabel{
+    font-size: 13px;
+  }
+  #buttons .button{
+    display: block;
+    width: 180px;
+    margin: 0 auto;
+    margin-bottom: 30px;
+  }
+  .controlContainer{
+    width: 100%;
+    height: 75px;
+  }
+  .prefix {
+    display: inline;
+    float: none;
+    margin-left: 10px !important;
+  }
+.controlContainer .valLabel {
+    display: inline-block;
+    padding-top: 8px !important;
+    margin-left: 10px !important;
+}
+.controlContainer.minPayment .valLabel{
+  left: -10px !important;
+}
+.controlContainer.capAtStandardRepayment{
+  margin-left: 0px;
+}
+#minPayment, #forgivenessPeriod {
+    margin-top: 0px !important;
+}
 }
