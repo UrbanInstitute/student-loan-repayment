@@ -21,9 +21,6 @@ body{
 	padding-left: 90px;
 }
 
-
-
-
 /*#sections{
   pointer-events: none;
   opacity: 0;
@@ -281,14 +278,32 @@ p{
   font-style: italic;
   font-family: Lato;
 }
+
+#notes-container {
+  display: inline-block;  
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
 #notes{
   font-size: 11px;
-  display: inline-block;
+  /*display: inline-block;*/
+  float: left;
   width: 810px;
   padding-left: 40px;
 }
 #notes span{
   display: block;
+}
+
+.urban-logo {
+  float: right;
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 2px;
+
 }
 
 /********************************************************/
@@ -380,13 +395,12 @@ p{
     padding: 13px 20px 13px 20px;
     background-color: #1696d2;
     color: #fff;
-    display: inline-block;
     cursor: pointer;
-    margin-right: 5px;
-    margin-bottom: 50px;
-    float: right;
-    margin-bottom: 120px;
-    margin-right: 161px;
+    width: 150px;
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 15px;
+    margin-top:15px;
 }
 #downloadData a{
 	color: #fff;
@@ -927,9 +941,9 @@ input.triangle[type=range]:focus::-ms-fill-upper {
   }
   #downloadData{
     font-size: 12px;
-    margin-left: 10px;
-    margin-top: 10px;
-    float: none;
+    /*margin-left: 10px;*/
+    /*margin-top: 10px;*/
+    /*float: none;*/
   }
   #repaymentChart, #yearsChart{
     width: 320px;
