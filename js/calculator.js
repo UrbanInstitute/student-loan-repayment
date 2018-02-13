@@ -254,8 +254,8 @@ function buildRepaymentChart(){
 
 	var svg = d3.select("#repaymentChart").append("svg").attr("width", w).attr("height",h),
 	    margin = {top: 30, right: marginRight, bottom: 60, left: marginLeft},
-	    // width = w - margin.left - margin.right,
-	    width = w - margin.right,
+	    width = w - margin.left - margin.right,
+	    // width = w - margin.right,
 	    height = h - margin.top - margin.bottom,
 	    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -350,8 +350,8 @@ function updateRepaymentChart(){
 	h = 500
 
 	var	margin = {top: 30, right: marginRight, bottom: 60, left: marginLeft},
-	    // width = w - margin.left - margin.right,
-	    width = w - margin.right,
+	    width = w - margin.left - margin.right,
+	    // width = w - margin.right,
 	    height = h - margin.top - margin.bottom;
 
 	var x = d3.scaleLinear().range([0, width]),
@@ -454,8 +454,8 @@ function buildYearsChart(){
 
 	var svg = d3.select("#yearsChart").append("svg").attr("width", w).attr("height",h),
 	    margin = {top: 30, right: marginRight, bottom: 60, left: 20},
-	    // width = w - margin.left - margin.right,
-	    width = w - margin.right,
+	    width = w - margin.left - margin.right,
+	    // width = w - margin.right,
 	    height = h - margin.top - margin.bottom,
 	    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -532,8 +532,8 @@ function updateYearsChart(){
 	h = 500
 
 	var	margin = {top: 30, right: marginRight, bottom: 60, left: 20},
-	    // width = w - margin.left - margin.right,
-	    width = w - margin.right,
+	    width = w - margin.left - margin.right,
+	    // width = w - margin.right,
 	    height = h - margin.top - margin.bottom;
 
 	var x = d3.scaleLinear().range([0, width]),
