@@ -220,7 +220,7 @@ function buildAllData(){
 		    var encodedUri = 'data:Application/octet-stream,' + csvData;
 		    d3.select('#downloadData a')
 		        .attr('href', encodedUri)
-		        .attr('download', 'tpc-simulator-results.csv');
+		        .attr('download', 'idr-data.csv');
 
 		})
 	})
