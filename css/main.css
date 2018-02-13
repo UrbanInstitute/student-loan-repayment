@@ -178,7 +178,7 @@ p{
 }
 
 #heroimage{
-  background-image: url("https://apps.urban.org/features/funding-formulas/images/header-img.png");
+  background-image: url(../images/0209illustration.png);
   background-size: cover;
   background-repeat: no-repeat;
   width: 100%;
