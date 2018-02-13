@@ -188,6 +188,11 @@ p{
 @media (max-width: 2000px) {
   .headerimage{ height:600px;}
 }
+
+@media (max-width: 1400px) {
+  .headerimage{ height:500px;}
+}
+
 /*browser windows smaller than 850px*/
 @media (max-width: 600px) {
    .headerimage{ height:300px;}
