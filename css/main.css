@@ -281,8 +281,9 @@ p{
 
 #notes-container {
   display: inline-block;  
-  width: 100%;
-  max-width: 1000px;
+  /*width: 100%;*/
+  /*max-width: 1000px;*/
+  padding-left: 90px;
   margin: 0 auto;
 }
 
@@ -290,7 +291,7 @@ p{
   font-size: 11px;
   /*display: inline-block;*/
   float: left;
-  width: 810px;
+  width: 786px;
   padding-left: 40px;
 }
 #notes span{
@@ -298,12 +299,17 @@ p{
 }
 
 .urban-logo {
-  float: right;
+  float: right;  
+  padding-left: 25px;
+}
+
+
+.urban-logo-text {
   font-size: 11px;
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: 2px;
-
+  text-align: right;
 }
 
 /********************************************************/
@@ -911,8 +917,23 @@ input.triangle[type=range]:focus::-ms-fill-upper {
     margin-top: 32px;
 
   }
+
+  #notes-container {
+    width: 700px;
+    margin: 0 auto;
+    display: block;
+    padding: 0px;
+  }
+
   #notes{
-        width: calc(100% - 330px);
+    float: left;
+    display: block;
+    padding-left: 0px;
+    width: 70%;
+  }
+
+  .urban-logo {
+    float: left;
   }
 }
 
@@ -935,12 +956,26 @@ input.triangle[type=range]:focus::-ms-fill-upper {
   #loanAmount2 {
     left: 146px;
   }
+
+  #notes-container {
+    width: 320px;
+  }
+
   #notes{
     width: 100%;
     padding-left: 10px;
   }
+
+  .urban-logo-text {
+    display: none;
+  }
+
+  .urban-logo {
+    padding-left: 10px;
+  }
+
   #downloadData{
-    font-size: 12px;
+    font-size: 12px;    
     /*margin-left: 10px;*/
     /*margin-top: 10px;*/
     /*float: none;*/
