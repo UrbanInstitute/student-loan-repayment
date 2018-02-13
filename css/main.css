@@ -479,6 +479,8 @@ p{
 .controlContainer.minPayment .valLabel{
 	text-align: left;
 	padding-left: 9px;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
 }
 .controlContainer .label{
 	font-weight: bold;
@@ -513,7 +515,7 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0 !important; 
 }
 
-.vallabel {
+.valLabel {
   -webkit-appearance: textfield;
   -moz-appearance: textfield;
 }
