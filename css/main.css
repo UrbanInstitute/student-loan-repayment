@@ -21,9 +21,6 @@ body{
 	padding-left: 90px;
 }
 
-
-
-
 /*#sections{
   pointer-events: none;
   opacity: 0;
@@ -178,7 +175,7 @@ p{
 }
 
 #heroimage{
-  background-image: url("https://apps.urban.org/features/funding-formulas/images/header-img.png");
+  background-image: url(../images/0209illustration.png);
   background-size: cover;
   background-repeat: no-repeat;
   width: 100%;
@@ -188,6 +185,11 @@ p{
 @media (max-width: 2000px) {
   .headerimage{ height:600px;}
 }
+
+@media (max-width: 1400px) {
+  .headerimage{ height:500px;}
+}
+
 /*browser windows smaller than 850px*/
 @media (max-width: 600px) {
    .headerimage{ height:300px;}
@@ -276,14 +278,38 @@ p{
   font-style: italic;
   font-family: Lato;
 }
+
+#notes-container {
+  display: inline-block;  
+  /*width: 100%;*/
+  /*max-width: 1000px;*/
+  padding-left: 90px;
+  margin: 0 auto;
+}
+
 #notes{
   font-size: 11px;
-  display: inline-block;
-  width: 810px;
+  /*display: inline-block;*/
+  float: left;
+  width: 786px;
   padding-left: 40px;
 }
 #notes span{
   display: block;
+}
+
+.urban-logo {
+  float: right;  
+  padding-left: 25px;
+}
+
+
+.urban-logo-text {
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-align: right;
 }
 
 /********************************************************/
@@ -375,13 +401,12 @@ p{
     padding: 13px 20px 13px 20px;
     background-color: #1696d2;
     color: #fff;
-    display: inline-block;
     cursor: pointer;
-    margin-right: 5px;
-    margin-bottom: 50px;
-    float: right;
-    margin-bottom: 120px;
-    margin-right: 161px;
+    width: 150px;
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 15px;
+    margin-top:15px;
 }
 #downloadData a{
 	color: #fff;
@@ -454,6 +479,8 @@ p{
 .controlContainer.minPayment .valLabel{
 	text-align: left;
 	padding-left: 9px;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
 }
 .controlContainer .label{
 	font-weight: bold;
@@ -482,10 +509,15 @@ p{
 
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    margin: 0; 
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    margin: 0 !important; 
+}
+
+.valLabel {
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
 }
 
 
@@ -637,7 +669,8 @@ input[type=range]:-moz-focusring{
 
 input[type=range]::-ms-track {
     /*width: 300px;*/
-    height: 5px;
+    max-width: 50px !important;
+    /*height: 5px;*/
     
     /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
     background: transparent;
@@ -915,8 +948,23 @@ input.triangle[type=range]:focus::-ms-fill-upper {
     margin-top: 32px;
 
   }
+
+  #notes-container {
+    width: 700px;
+    margin: 0 auto;
+    display: block;
+    padding: 0px;
+  }
+
   #notes{
-        width: calc(100% - 330px);
+    float: left;
+    display: block;
+    padding-left: 0px;
+    width: 70%;
+  }
+
+  .urban-logo {
+    float: left;
   }
 }
 
@@ -939,15 +987,29 @@ input.triangle[type=range]:focus::-ms-fill-upper {
   #loanAmount2 {
     left: 146px;
   }
+
+  #notes-container {
+    width: 320px;
+  }
+
   #notes{
     width: 100%;
     padding-left: 10px;
   }
+
+  .urban-logo-text {
+    display: none;
+  }
+
+  .urban-logo {
+    padding-left: 10px;
+  }
+
   #downloadData{
-    font-size: 12px;
-    margin-left: 10px;
-    margin-top: 10px;
-    float: none;
+    font-size: 12px;    
+    /*margin-left: 10px;*/
+    /*margin-top: 10px;*/
+    /*float: none;*/
   }
   #repaymentChart, #yearsChart{
     width: 320px;
