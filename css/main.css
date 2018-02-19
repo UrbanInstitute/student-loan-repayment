@@ -646,17 +646,18 @@ input[type=range]:-moz-focusring{
 
 input[type=range]::-ms-track {
     /*width: 300px;*/
+    max-width: 150px;
     height: 5px;
     
     /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
-    background: transparent;
+    background: pink;
     
     /*leave room for the larger thumb to overflow with a transparent border */
-    border-color: transparent;
+    border-color: pink;
     border-width: 6px 0;
 
     /*remove default tick marks*/
-    color: transparent;
+    color: green;
 }
 input[type=range]::-ms-fill-lower {
     background: #9d9d9d;
