@@ -53,7 +53,7 @@ body{
     position: absolute; 
     left: 10px;
     margin-top: 7px;
-    background: url(http://www.urban.org/sites/all/themes/urban/images/logo-mini-dark.png) no-repeat;
+    background: url(https://www.urban.org/sites/all/themes/urban/images/logo-mini-dark.png) no-repeat;
     background-size: 34px 34px;
 }
 
@@ -110,7 +110,7 @@ body{
 #header-pinned .share-icons .shareThisB {
     display: block;
     background-repeat: no-repeat;
-    background-image: url(http://www.urban.org/sites/all/themes/urban/images/generated/icons-s8fe141aaaa.png);
+    background-image: url(https://www.urban.org/sites/all/themes/urban/images/generated/icons-s8fe141aaaa.png);
     background-position: 0 -2396px;
     height: 32px;
     width: 32px;
