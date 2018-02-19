@@ -593,23 +593,23 @@ input[type=range] {
 }
 
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-input[type=range] {
-  float: none;
-  width: 110px;
-  clear: both;
-  position: relative;
-  top: 6px;
-    /*removes default webkit styles*/
-    -webkit-appearance: none;
-    
-    /*fix for FF unable to apply focus style bug */
-    border: none;
-    height: 75px;
-    background-color: transparent;
-    
-    /*required for proper track sizing in FF*/
-    /*width: 300px;*/
-}
+  input[type=range] {
+    float: none;
+    width: 110px;
+    clear: both;
+    position: relative;
+    top: 6px;
+      /*removes default webkit styles*/
+      -webkit-appearance: none;
+      
+      /*fix for FF unable to apply focus style bug */
+      border: none;
+      height: 75px;
+      background-color: transparent;
+      
+      /*required for proper track sizing in FF*/
+      /*width: 300px;*/
+  }
 
 
 }
@@ -771,6 +771,29 @@ input.triangle[type=range] {
     /*required for proper track sizing in FF*/
     /*width: 300px;*/
 }
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  input.triangle[type=range] {
+    float: none;
+    width: 110px;
+    clear: both;
+    position: relative;
+    top: 6px;
+      /*removes default webkit styles*/
+      -webkit-appearance: none;
+      
+      /*fix for FF unable to apply focus style bug */
+      border: none;
+      height: 75px;
+      background-color: transparent;
+      
+      /*required for proper track sizing in FF*/
+      /*width: 300px;*/
+  }
+
+
+}
+
+
 input.triangle[type=range]::-webkit-slider-runnable-track {
     /*width: 300px;*/
     height: 5px;
