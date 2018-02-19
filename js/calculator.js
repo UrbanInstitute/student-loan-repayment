@@ -684,9 +684,18 @@ function scrollDown(){
 }
 
 
+var isIE = function() {
+var userAgent = navigator.userAgent;
+return userAgent.indexOf('MSIE') !== -1 ||  
+  userAgent.indexOf('Trident') !== -1;
+};
 
 
-d3.selectAll("#percentDiscretionaryAGI").on("input", function(){
+var sliderEvent = isIE() ? "change" : "input"
+
+
+
+d3.selectAll("#percentDiscretionaryAGI").on(sliderEvent, function(){
 	PREV_DATA = {}
 	var val = $(this).val()
 	if (val >= 1) { $(this.parentNode).find(".valLabel").css("width","43px") }
@@ -711,7 +720,7 @@ d3.selectAll(".controlContainer.percentDiscretionaryAGI .valLabel").on("input", 
 	updateCharts(d3.select("#forgivenessPeriod").classed("disabled"))
 })
 
-d3.selectAll("#forgivenessPeriod").on("input", function(){
+d3.selectAll("#forgivenessPeriod").on(sliderEvent, function(){
 	PREV_DATA = {}
 	var val = $(this).val()
 	if( ! d3.select("#forgivenessPeriod").classed("disabled") ){
@@ -745,7 +754,7 @@ d3.selectAll(".controlContainer.forgivenessPeriod .valLabel").on("input", functi
 	updateCharts()
 })
 
-d3.selectAll("#minPayment").on("input", function(){
+d3.selectAll("#minPayment").on(sliderEvent, function(){
 	PREV_DATA = {}
 	var val = $(this).val()
 
@@ -774,7 +783,7 @@ d3.selectAll(".controlContainer.minPayment .valLabel").on("input", function(){
 })
 
 
-d3.selectAll("#loanAmount").on("input", function(){
+d3.selectAll("#loanAmount").on(sliderEvent, function(){
 	PREV_DATA = {}
 	var formatter = d3.format("$,.0f")
 	var val = $(this).val()
@@ -784,7 +793,7 @@ d3.selectAll("#loanAmount").on("input", function(){
 	$("#loanAmount2").val(val)
 	updateCharts()
 })
-d3.selectAll("#loanAmount2").on("input", function(){
+d3.selectAll("#loanAmount2").on(sliderEvent, function(){
 	PREV_DATA = {}
 	var formatter = d3.format("$,.0f")
 	var val = $(this).val()
