@@ -646,7 +646,7 @@ input[type=range]:-moz-focusring{
 
 input[type=range]::-ms-track {
     /*width: 300px;*/
-    max-width: 50px;
+    max-width: 50px !important;
     /*height: 5px;*/
     
     /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
