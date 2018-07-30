@@ -27,6 +27,7 @@ function getGlobals(){
 
 function getInputs(){
 	var inputs = {}
+	inputs.incomeExcluded = parseFloat($("#incomeExcluded").val())
 	inputs.percentDiscretionaryAGI = parseFloat($("#percentDiscretionaryAGI").val())
 	inputs.forgivenessPeriod = parseFloat($("#forgivenessPeriod").val())
 	inputs.loanAmount = parseFloat($("#loanAmount").val())
@@ -56,7 +57,7 @@ function getNPV(agi, year, opts){
 	}
 
 	var incPay;
-	var inc = opts.percentDiscretionaryAGI*(income-1.5*opts.povertyLevel*Math.pow((1+opts.inflation),year))
+	var inc = opts.percentDiscretionaryAGI*(income-opts.incomeExcluded*opts.povertyLevel*Math.pow((1+opts.inflation),year))
 	var minAnnualPayment = opts.minPayment*12;
 	if(minAnnualPayment > inc){
 		incPay = minAnnualPayment;
@@ -629,10 +630,10 @@ function enableForgiveness(years){
 }
 
 function setPlan(o, id){
-	var elems = ["percentDiscretionaryAGI", "forgivenessPeriod", "minPayment"]
+	var elems = ["percentDiscretionaryAGI", "forgivenessPeriod", "minPayment","incomeExcluded"]
 	for(var i =0; i < elems.length; i++){
 		var el = elems[i]
-		var mult = (el == "percentDiscretionaryAGI") ? 100 : 1;
+		var mult = (el == "percentDiscretionaryAGI" || el == "incomeExcluded") ? 100 : 1;
 
 		if(o[el] != null){
 			var val = o[el]
@@ -693,6 +694,33 @@ return userAgent.indexOf('MSIE') !== -1 ||
 
 var sliderEvent = isIE() ? "change" : "input"
 
+
+
+
+d3.selectAll("#incomeExcluded").on(sliderEvent, function(){
+	PREV_DATA = {}
+	var val = $(this).val()
+	if (val >= 1) { $(this.parentNode).find(".valLabel").css("width","43px") }
+	else if(val >= .1){ $(this.parentNode).find(".valLabel").css("width","36px") }
+	else{ $(this.parentNode).find(".valLabel").css("width","26px") }
+	$(this.parentNode).find(".valLabel").val(parseInt(val*100))
+	updateCharts()
+})
+d3.selectAll(".controlContainer.incomeExcluded .valLabel").on("input", function(){
+	PREV_DATA = {}
+	var val = parseInt($(this).val()),
+		max = parseInt($(this).attr("max")),
+		min = parseInt($(this).attr("min"))
+	if (val >= 100) { $(this.parentNode).find(".valLabel").css("width","43px") }
+	else if(val >= 10){ $(this.parentNode).find(".valLabel").css("width","36px") }
+	else{ $(this.parentNode).find(".valLabel").css("width","26px") }
+
+	if(val > max){ val = max }
+	if(val < min){ val = min }
+	$(this).val(val)
+	$(this.parentNode).find(".controlSlider").val(parseFloat(val/100.0))
+	updateCharts(d3.select("#forgivenessPeriod").classed("disabled"))
+})
 
 
 d3.selectAll("#percentDiscretionaryAGI").on(sliderEvent, function(){
@@ -827,27 +855,35 @@ d3.select(".switch")
 d3.selectAll(".repayeUndergrad").on("click", function(){
 	PREV_DATA = {}
 	if(d3.select(this).classed("buttonLink")){ scrollDown()}
-	var o = {"percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":20,"capAtStandardRepayment":false, "loanAmount": null}
+	var o = {"incomeExcluded":1.5, "percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":20,"capAtStandardRepayment":false, "loanAmount": null}
 	setPlan(o, "repayeUndergrad")
 })
 d3.selectAll(".repayeGrad").on("click", function(){
 	PREV_DATA = {}
 	if(d3.select(this).classed("buttonLink")){ scrollDown()}
-	var o = {"percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":25,"capAtStandardRepayment":false, "loanAmount": null}
+	var o = {"incomeExcluded":1.5, "percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":25,"capAtStandardRepayment":false, "loanAmount": null}
 	setPlan(o, "repayeGrad")
 })
 d3.selectAll(".repayePSLF").on("click", function(){
 	PREV_DATA = {}
 	if(d3.select(this).classed("buttonLink")){ scrollDown()}
-	var o = {"percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":10,"capAtStandardRepayment":false, "loanAmount": null}
+	var o = {"incomeExcluded":1.5, "percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":10,"capAtStandardRepayment":false, "loanAmount": null}
 	setPlan(o, "repayePSLF")
 })
 d3.selectAll(".prosper").on("click", function(){
 	PREV_DATA = {}
 	if(d3.select(this).classed("buttonLink")){ scrollDown()}
-	var o = {"percentDiscretionaryAGI":.15, "minPayment":25, "forgivenessPeriod":50,"capAtStandardRepayment":true, "loanAmount": null}
+	var o = {"incomeExcluded":1.5, "percentDiscretionaryAGI":.15, "minPayment":25, "forgivenessPeriod":50,"capAtStandardRepayment":true, "loanAmount": null}
 	setPlan(o, "prosper")
 })
+d3.selectAll(".aimHigher").on("click", function(){
+	PREV_DATA = {}
+	if(d3.select(this).classed("buttonLink")){ scrollDown()}
+	var o = {"incomeExcluded":2.5, "percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":20,"capAtStandardRepayment":false, "loanAmount": null}
+	setPlan(o, "aimHigher")
+})
+
+
 
 
 
