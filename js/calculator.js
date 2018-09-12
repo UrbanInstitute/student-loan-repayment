@@ -220,7 +220,7 @@ function buildAllData(){
 		buildYearsData(function(yearData){
 			var opts = buildOpts();
 
-		    var s = "adjusted_gross_income,total_repaid,years_to_repay,loan_amount,percent_discretionary_agi,forgiveness_period,minimum_payment,forgiveness_at_match_standard,annual_income_increase,poverty_level,discount_rate,inflation_rate,interest_rate,standard_repayment_fee,standard_number_of_years,standard_annual_payment,standard_total_payment_present_value"
+		    var s = "adjusted_gross_income,total_repaid,years_to_repay,loan_amount,percent_discretionary_agi,minimum_payment,discretionary_cutoff,reduce_cutoff_based_on_income,income_cutoff,reduction_amount,forgiveness_at_match_standard,forgiveness_period,forgiveness_at_percent_initial_loan,percent_initial_loan,annual_income_increase,poverty_level,discount_rate,inflation_rate,interest_rate,standard_repayment_fee,standard_number_of_years,standard_annual_payment,standard_total_payment_present_value"
 		    s += "\r\n"
 
 		    for(var i = 0; i < dollarData.length; i++){
@@ -231,7 +231,9 @@ function buildAllData(){
 
 		    	var yearMax = (opts.capAtStandardRepayment) ? MAX_YEARS : opts.forgivenessPeriod;
 		    	var match = (opts.capAtStandardRepayment) ? "YES" : "NO";
-		    	s += agi + "," + npv + "," + years + "," + opts.loanAmount + "," + opts.percentDiscretionaryAGI + "," + yearMax + "," + opts.minPayment + "," + match + "," + opts.incomeIncrease + "," + opts.povertyLevel + "," + opts.discountRate + "," + opts.inflation + "," + opts.interestRate + "," + opts.standardFee + "," + opts.standardYears + "," + opts.standardRepayment + "," + opts.totalStandardRepayment;
+		    	var exclude = (opts.excludeIncome) ? "YES" : "NO"
+		    	var percentPayment = (opts.capAtPercentPayment) ? "YES" : "NO"
+		    	s += agi + "," + npv + "," + years + "," + opts.loanAmount + "," + opts.percentDiscretionaryAGI + "," + opts.minPayment + "," + opts.percentFPL + "," + exclude + "," + opts.fplIncome + "," + opts.fplReduction + "," + match + ","  + yearMax + "," + percentPayment + "," + opts.percentLoan + "," + opts.incomeIncrease + "," + opts.povertyLevel + "," + opts.discountRate + "," + opts.inflation + "," + opts.interestRate + "," + opts.standardFee + "," + opts.standardYears + "," + opts.standardRepayment + "," + opts.totalStandardRepayment;
 		    	s += "\r\n"
 		    }
 
