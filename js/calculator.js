@@ -27,12 +27,17 @@ function getGlobals(){
 
 function getInputs(){
 	var inputs = {}
-	inputs.incomeExcluded = parseFloat($("#incomeExcluded").val())
+	inputs.percentFPL = parseFloat($("#percentFPL").val())
 	inputs.percentDiscretionaryAGI = parseFloat($("#percentDiscretionaryAGI").val())
 	inputs.forgivenessPeriod = parseFloat($("#forgivenessPeriod").val())
 	inputs.loanAmount = parseFloat($("#loanAmount").val())
 	inputs.capAtStandardRepayment = d3.select("#capAtStandardRepayment").classed("on");
+	inputs.excludeIncome = d3.select("#excludeIncome").classed("on");
+	inputs.fplIncome = parseFloat($("#fplIncome").val())
+	inputs.fplReduction = parseFloat($("#fplReduction").val())
 	inputs.minPayment = parseFloat($("#minPayment").val());
+	inputs.capAtPercentPayment = d3.select("#capAtPercentPayment").classed("on")
+	inputs.percentLoan = parseFloat($("#percentLoan").val())
 
 	return inputs;
 }
@@ -50,21 +55,33 @@ function getStandardRepayment(opts){
 
 
 function getNPV(agi, year, opts){
+	// if(year === 0 && agi == 5000){
+	// 	console.log(opts)
+	// }
 	var loanAmount = opts.loanAmount;
 	var income = agi;
 	for(var y = 0; y < year; y++){
 		income = income * (1 + opts.incomeIncrease)
 	}
 
+	var adjustedPercentFPL;
+	// if(opts.excludeIncome){	console.log(opts.excludeIncome, income, fplIncome)}
+	if(opts.excludeIncome && income > opts.fplIncome){
+		// console.log(opts.fplIncome, opts.fplReduction, income)
+		var incomeFloor = (Math.floor(income/1000)) * 1000
+		var diff = (incomeFloor - opts.fplIncome) / 1000
+		adjustedPercentFPL = Math.max(0,opts.percentFPL - opts.fplReduction*diff)
+		// console.log(adjustedPercentFPL)
+	}else{
+		adjustedPercentFPL = opts.percentFPL
+	}
+
 	var incPay;
-	var inc = opts.percentDiscretionaryAGI*(income-opts.incomeExcluded*opts.povertyLevel*Math.pow((1+opts.inflation),year))
+	var inc = opts.percentDiscretionaryAGI*(income-adjustedPercentFPL*opts.povertyLevel*Math.pow((1+opts.inflation),year))
 	var minAnnualPayment = opts.minPayment*12;
 	if(minAnnualPayment > inc){
 		incPay = minAnnualPayment;
 	}else{
-		// if(opts.standardRepayment < inc && opts.capAtStandardRepayment){
-			// incPay = opts.standardRepayment
-		// }else{
 			incPay = inc;
 		// }
 	}
@@ -88,7 +105,7 @@ function getNPV(agi, year, opts){
 // }
 
 	var yearlyPayment, yearlyUnbounded;
-	if(opts.capAtStandardRepayment && year != 0){
+	if((opts.capAtStandardRepayment && year != 0) || (opts.capAtPercentPayment && year != 0)){
 	// if(false){
 		var sumInc = incPay;
 		for(var i = 0; i < year; i++){
@@ -102,10 +119,13 @@ function getNPV(agi, year, opts){
 		}
 
 		var totalRepayment = opts.standardRepayment*opts.standardYears
-		if(sumInc >= totalRepayment && sumPay < totalRepayment){
-			yearlyPayment = totalRepayment - sumPay
+		var percentLoanCap = loanAmount*(1+opts.percentLoan)
+
+		var cap = (opts.capAtStandardRepayment) ? totalRepayment : percentLoanCap
+		if(sumInc >= cap && sumPay < cap){
+			yearlyPayment = cap - sumPay
 		}else{
-			if(sumInc >= totalRepayment && sumPay >= totalRepayment){
+			if(sumInc >= cap && sumPay >= cap){
 				yearlyPayment = 0
 			}else{
 				yearlyPayment = incPay
@@ -230,12 +250,24 @@ function buildRepaymentData(callback){
 	var data = []
 	var opts = buildOpts();
 
+	if(!opts.excludeIncome){ disableFpl() }
+	else{ enableFpl() }
+
 	if(opts.forgivenessPeriod == MAX_YEARS){ disableForgiveness(true) }
 	else{ enableForgiveness(opts.forgivenessPeriod) }
-	if(opts.capAtStandardRepayment){ disableForgiveness(false) }
+
+	if(opts.capAtStandardRepayment){
+		
+		disableForgiveness(false)
+	}
 	else{ enableForgiveness(opts.forgivenessPeriod) }
 
-	for(var agi = 5000; agi <= 120000; agi += 500){
+	if(!opts.capAtPercentPayment){disablePercentPayment() }
+	else{
+		enablePercentPayment()
+	}
+
+	for(var agi = 5000; agi <= 140000; agi += 500){
 		datum = {"agi": agi, "totalStandardRepayment": opts.totalStandardRepayment, "npv": getTotalRepayment(agi)}
 		data.push(datum)
 	}
@@ -281,7 +313,7 @@ function buildRepaymentChart(){
 		var xAx = g.append("g")
 		  .attr("class", "axis axis--x")
 		  .attr("transform", "translate(0," + height + ")")
-		  .call(d3.axisBottom(x).tickFormat(formatter).tickValues([0,20000,40000,60000,80000,100000,120000]));
+		  .call(d3.axisBottom(x).tickFormat(formatter).tickValues([0,20000,40000,60000,80000,100000,120000,140000]));
 		xAx.selectAll(".tick text").attr("x", function(d){ return (d == 0) ? 15 : 0})
 		xAx.selectAll(".tick line").attr("opacity", function(d){ return (d == 0) ? 0 : 1})
 
@@ -381,7 +413,7 @@ function updateRepaymentChart(){
 
 		var xAx = svg.selectAll(".axis.axis--x")
 		  .attr("transform", "translate(0," + height + ")")
-		  .call(d3.axisBottom(x).tickFormat(formatter).tickValues([0,20000,40000,60000,80000,100000,120000]));
+		  .call(d3.axisBottom(x).tickFormat(formatter).tickValues([0,20000,40000,60000,80000,100000,120000,140000]));
 		xAx.selectAll(".tick text").attr("x", function(d){ return (d == 0) ? 15 : 0})
 		xAx.selectAll(".tick line").attr("opacity", function(d){ return (d == 0) ? 0 : 1})
 
@@ -436,7 +468,7 @@ function buildYearsData(callback){
 
 	var opts = $.extend(globals, inputs);
 
-	for(var agi = 5000; agi <= 120000; agi += 500){
+	for(var agi = 5000; agi <= 140000; agi += 500){
 		datum = {"agi": agi, "years": getYearsToRepay(agi)}
 		data.push(datum)
 	}
@@ -481,7 +513,7 @@ function buildYearsChart(){
 		var xAx = g.append("g")
 		  .attr("class", "axis axis--x")
 		  .attr("transform", "translate(0," + height + ")")
-		  .call(d3.axisBottom(x).tickFormat(formatter).tickValues([0,20000,40000,60000,80000,100000,120000]));
+		  .call(d3.axisBottom(x).tickFormat(formatter).tickValues([0,20000,40000,60000,80000,100000,120000,140000]));
 		xAx.selectAll(".tick text").attr("x", function(d){ return (d == 0) ? 15 : 0})
 		xAx.selectAll(".tick line").attr("opacity", function(d){ return (d == 0) ? 0 : 1})
 
@@ -561,7 +593,7 @@ function updateYearsChart(){
 
 		var xAx = svg.selectAll(".axis.axis--x")
 		  .attr("transform", "translate(0," + height + ")")
-		  .call(d3.axisBottom(x).tickFormat(formatter).tickValues([0,20000,40000,60000,80000,100000,120000]));
+		  .call(d3.axisBottom(x).tickFormat(formatter).tickValues([0,20000,40000,60000,80000,100000,120000,140000]));
 		xAx.selectAll(".tick text").attr("x", function(d){ return (d == 0) ? 15 : 0})
 		xAx.selectAll(".tick line").attr("opacity", function(d){ return (d == 0) ? 0 : 1})
 
@@ -621,20 +653,75 @@ function disableForgiveness(maxYear){
 	$("#forgivenessPeriodLabel").val(50)
 }
 function enableForgiveness(years){
+
+	var fp = (typeof(d3.select("#forgivenessPeriod").datum()) == "undefined") ? years : d3.select("#forgivenessPeriod").datum()
+	
+	$("#forgivenessPeriod").val(fp)
+	$("#forgivenessPeriodLabel").val(fp)
+
 	if(years == MAX_YEARS){ return false}
 	d3.select("#forgivenessPeriod").classed("disabled", false)
 	d3.select(".controlContainer.forgivenessPeriod .valLabel").classed("disabled", false)
 	d3.select(".controlContainer.forgivenessPeriod .suffix").classed("disabled", false)
 	d3.select("#noForgiveness").classed("disabled", false)
 	
+
+	
+}
+
+function disableFpl(){
+	d3.select("#fplIncome").classed("disabled", true)
+	d3.select(".controlContainer.fplIncome .valLabel").classed("disabled", true)
+	d3.select(".controlContainer.fplIncome .prefix").classed("disabled", true)
+
+	d3.select("#fplReduction").classed("disabled", true)
+	d3.select(".controlContainer.fplReduction .valLabel").classed("disabled", true)
+	d3.select(".controlContainer.fplReduction .suffix").classed("disabled", true)
+
+
+	var fi = (typeof(d3.select("#fplIncome").datum()) == "undefined") ? 120000 : d3.select("#fplIncome").datum()
+	$("#fplIncome").val(fi)
+	$(".valLabel.fplIncome").val(fi)
+
+	var fr = (typeof(d3.select("#fplReduction").datum()) == "undefined") ? .05 : d3.select("#fplReduction").datum()
+	$("#fplReduction").val(fr)
+	$(".valLabel.fplReduction").val(fr*100)
+}
+function enableFpl(years){
+	d3.select("#fplIncome").classed("disabled", false)
+	d3.select(".controlContainer.fplIncome .valLabel").classed("disabled", false)
+	d3.select(".controlContainer.fplIncome .suffix").classed("disabled", false)
+
+	d3.select("#fplReduction").classed("disabled", false)
+	d3.select(".controlContainer.fplReduction .valLabel").classed("disabled", false)
+	d3.select(".controlContainer.fplReduction .suffix").classed("disabled", false)
+
+}
+
+function disablePercentPayment(){
+	d3.select("#percentLoan").classed("disabled", true)
+	d3.select(".controlContainer.percentLoan .valLabel").classed("disabled", true)
+	d3.select(".controlContainer.percentLoan .prefix").classed("disabled", true)
+
+	var pl = (typeof(d3.select("#percentLoan").datum()) == "undefined") ? .5 : d3.select("#percentLoan").datum()
+	$("#percentLoan").val(pl)
+	$(".valLabel.percentLoan").val(pl *100)
+
+}
+function enablePercentPayment(years){
+	d3.select("#percentLoan").classed("disabled", false)
+	d3.select(".controlContainer.percentLoan .valLabel").classed("disabled", false)
+	d3.select(".controlContainer.percentLoan .suffix").classed("disabled", false)
 }
 
 function setPlan(o, id){
-	var elems = ["percentDiscretionaryAGI", "forgivenessPeriod", "minPayment","incomeExcluded"]
+	var elems = ["percentDiscretionaryAGI", "forgivenessPeriod", "minPayment","percentFPL","fplReduction","fplIncome","percentLoan"]
 	for(var i =0; i < elems.length; i++){
 		var el = elems[i]
-		var mult = (el == "percentDiscretionaryAGI" || el == "incomeExcluded") ? 100 : 1;
-
+		var mult = (el == "percentDiscretionaryAGI" || el == "percentFPL" || el == "fplReduction" || el == "percentLoan") ? 100 : 1;
+		if(el == "fplReduction" || el == "fplIncome" || el == "percentLoan"){
+			d3.select("#" + el).datum(o[el])
+		}
 		if(o[el] != null){
 			var val = o[el]
 			if(el == "percentDiscretionaryAGI"){
@@ -643,6 +730,7 @@ function setPlan(o, id){
 				else{ $(".controlContainer." + el).find(".valLabel").css("width","26px") }
 			}
 			else if(el == "forgivenessPeriod"){
+				d3.select("#forgivenessPeriod").datum(o[el])
 				if (val < 10) { $(".controlContainer." + el).find(".valLabel").css("width","53px") }
 				else{ $(".controlContainer." + el).find(".valLabel").css("width","61px") }			
 			}
@@ -659,6 +747,17 @@ function setPlan(o, id){
 			d3.select("#capAtStandardRepayment").classed("on", val)
 			d3.select("#capAtStandardRepayment").classed("off", !val)
 		}
+		if(o["capAtPercentPayment"] != null){
+			var val = o["capAtPercentPayment"]
+			d3.select("#capAtPercentPayment").classed("on", val)
+			d3.select("#capAtPercentPayment").classed("off", !val)
+		}
+		if(o["excludeIncome"] != null){
+			var val = o["excludeIncome"]
+			d3.select("#excludeIncome").classed("on", val)
+			d3.select("#excludeIncome").classed("off", !val)
+		}
+
 	}
 	updateCharts();	
 	d3.select(".button." + id).classed("clicked", true)
@@ -672,10 +771,10 @@ function buildCharts(){
 	buildAllData();
 	buildGradient();
 }
-function updateCharts(disabled){
-	if(typeof(disabled) == "undefined" || !disabled){
-		d3.selectAll(".button.clicked").classed("clicked", false)
-	}
+function updateCharts(){
+	
+	d3.selectAll(".button.clicked").classed("clicked", false)
+	
 	updateRepaymentChart();
 	updateYearsChart();
 	buildAllData();
@@ -697,7 +796,7 @@ var sliderEvent = isIE() ? "change" : "input"
 
 
 
-d3.selectAll("#incomeExcluded").on(sliderEvent, function(){
+d3.selectAll("#percentFPL").on(sliderEvent, function(){
 	PREV_DATA = {}
 	var val = $(this).val()
 	if (val >= 1) { $(this.parentNode).find(".valLabel").css("width","43px") }
@@ -706,7 +805,7 @@ d3.selectAll("#incomeExcluded").on(sliderEvent, function(){
 	$(this.parentNode).find(".valLabel").val(parseInt(val*100))
 	updateCharts()
 })
-d3.selectAll(".controlContainer.incomeExcluded .valLabel").on("input", function(){
+d3.selectAll(".controlContainer.percentFPL .valLabel").on("input", function(){
 	PREV_DATA = {}
 	var val = parseInt($(this).val()),
 		max = parseInt($(this).attr("max")),
@@ -719,9 +818,104 @@ d3.selectAll(".controlContainer.incomeExcluded .valLabel").on("input", function(
 	if(val < min){ val = min }
 	$(this).val(val)
 	$(this.parentNode).find(".controlSlider").val(parseFloat(val/100.0))
-	updateCharts(d3.select("#forgivenessPeriod").classed("disabled"))
+	updateCharts()
 })
 
+d3.selectAll("#fplIncome").on(sliderEvent, function(){
+	PREV_DATA = {}
+	var val = $(this).val()
+	if( ! d3.select("#fplIncome").classed("disabled") ){
+		d3.select("#fplIncome").datum(val)
+		if (val >= 1) { $(this.parentNode).find(".valLabel").css("width","43px") }
+		else if(val >= .1){ $(this.parentNode).find(".valLabel").css("width","36px") }
+		else{ $(this.parentNode).find(".valLabel").css("width","26px") }
+	}
+
+	$(this.parentNode).find(".valLabel").val(parseInt(val*100))
+	updateCharts()
+})
+d3.selectAll(".controlContainer.fplIncome .valLabel").on("input", function(){
+	PREV_DATA = {}
+	var val = parseInt($(this).val()),
+		max = parseInt($(this).attr("max")),
+		min = parseInt($(this).attr("min"))
+	if( ! d3.select("#fplIncome").classed("disabled") ){
+		d3.select("#fplIncome").datum(val)
+		if (val >= 100) { $(this.parentNode).find(".valLabel").css("width","43px") }
+		else if(val >= 10){ $(this.parentNode).find(".valLabel").css("width","36px") }
+		else{ $(this.parentNode).find(".valLabel").css("width","26px") }
+
+		if(val > max){ val = max }
+		if(val < min){ val = min }
+	}
+	$(this).val(val)
+	$(this.parentNode).find(".controlSlider").val(parseFloat(val/100.0))
+	updateCharts()
+})
+
+d3.selectAll("#fplReduction").on(sliderEvent, function(){
+	PREV_DATA = {}
+	var val = $(this).val()
+	if( ! d3.select("#fplReduction").classed("disabled") ){
+		d3.select(this).datum(val)
+
+		if (val >= 1) { $(this.parentNode).find(".valLabel").css("width","43px") }
+		else if(val >= .1){ $(this.parentNode).find(".valLabel").css("width","36px") }
+		else{ $(this.parentNode).find(".valLabel").css("width","26px") }
+	}
+	$(this.parentNode).find(".valLabel").val(parseInt(val*100))
+	updateCharts()
+})
+d3.selectAll(".controlContainer.fplReduction .valLabel").on("input", function(){
+	PREV_DATA = {}
+	var val = parseInt($(this).val()),
+		max = parseInt($(this).attr("max")),
+		min = parseInt($(this).attr("min"))
+	if( ! d3.select("#fplReduction").classed("disabled") ){
+		d3.select("#fplReduction").datum(val)
+		if (val >= 100) { $(this.parentNode).find(".valLabel").css("width","43px") }
+		else if(val >= 10){ $(this.parentNode).find(".valLabel").css("width","36px") }
+		else{ $(this.parentNode).find(".valLabel").css("width","26px") }
+
+		if(val > max){ val = max }
+		if(val < min){ val = min }
+	}
+	$(this).val(val)
+	$(this.parentNode).find(".controlSlider").val(parseFloat(val/100.0))
+	updateCharts()
+})
+
+d3.selectAll("#percentLoan").on(sliderEvent, function(){
+	PREV_DATA = {}
+	var val = $(this).val()
+	if( ! d3.select("#percentLoan").classed("disabled") ){
+		d3.select("#percentLoan").datum(val)
+		if (val >= 1) { $(this.parentNode).find(".valLabel").css("width","43px") }
+		else if(val >= .1){ $(this.parentNode).find(".valLabel").css("width","36px") }
+		else{ $(this.parentNode).find(".valLabel").css("width","26px") }
+	}
+
+	$(this.parentNode).find(".valLabel").val(parseInt(val*100))
+	updateCharts()
+})
+d3.selectAll(".controlContainer.percentLoan .valLabel").on("input", function(){
+	PREV_DATA = {}
+	var val = parseInt($(this).val()),
+		max = parseInt($(this).attr("max")),
+		min = parseInt($(this).attr("min"))
+	if( ! d3.select("#percentLoan").classed("disabled") ){
+		d3.select("#percentLoan").datum(val)
+		if (val >= 100) { $(this.parentNode).find(".valLabel").css("width","43px") }
+		else if(val >= 10){ $(this.parentNode).find(".valLabel").css("width","36px") }
+		else{ $(this.parentNode).find(".valLabel").css("width","26px") }
+
+		if(val > max){ val = max }
+		if(val < min){ val = min }
+	}
+	$(this).val(val)
+	$(this.parentNode).find(".controlSlider").val(parseFloat(val/100.0))
+	updateCharts()
+})
 
 d3.selectAll("#percentDiscretionaryAGI").on(sliderEvent, function(){
 	PREV_DATA = {}
@@ -745,13 +939,14 @@ d3.selectAll(".controlContainer.percentDiscretionaryAGI .valLabel").on("input", 
 	if(val < min){ val = min }
 	$(this).val(val)
 	$(this.parentNode).find(".controlSlider").val(parseFloat(val/100.0))
-	updateCharts(d3.select("#forgivenessPeriod").classed("disabled"))
+	updateCharts()
 })
 
 d3.selectAll("#forgivenessPeriod").on(sliderEvent, function(){
 	PREV_DATA = {}
 	var val = $(this).val()
 	if( ! d3.select("#forgivenessPeriod").classed("disabled") ){
+		d3.select("#forgivenessPeriod").datum(val)
 		if (val < 10) { $(this.parentNode).find(".valLabel").css("width","53px") }
 		else{ $(this.parentNode).find(".valLabel").css("width","61px") }
 
@@ -760,7 +955,7 @@ d3.selectAll("#forgivenessPeriod").on(sliderEvent, function(){
 	}
 
 	$(this.parentNode).find(".valLabel").val(parseInt(val))
-	updateCharts(d3.select("#forgivenessPeriod").classed("disabled"))
+	updateCharts()
 })
 d3.selectAll(".controlContainer.forgivenessPeriod .valLabel").on("input", function(){
 	PREV_DATA = {}
@@ -838,7 +1033,7 @@ d3.selectAll("#loanAmount2").on(sliderEvent, function(){
 
 
 
-d3.select(".switch")
+d3.selectAll(".switch")
 .on("click", function(){
 	PREV_DATA = {}
 	if(d3.select(this).classed("on")){
@@ -848,6 +1043,13 @@ d3.select(".switch")
 	d3.select(this).classed("on", true)
 	d3.select(this).classed("off", false)
 	}
+	if(this.id == "capAtStandardRepayment"){
+		d3.select("#capAtPercentPayment").classed("on", false).classed("off", true)
+	}
+	if(this.id == "capAtPercentPayment"){
+		d3.select("#capAtStandardRepayment").classed("on", false).classed("off", true)
+	}
+
 	updateCharts();
 })
 
@@ -855,31 +1057,31 @@ d3.select(".switch")
 d3.selectAll(".repayeUndergrad").on("click", function(){
 	PREV_DATA = {}
 	if(d3.select(this).classed("buttonLink")){ scrollDown()}
-	var o = {"incomeExcluded":1.5, "percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":20,"capAtStandardRepayment":false, "loanAmount": null}
+	var o = {"percentFPL":1.5, "percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":20,"capAtStandardRepayment":false, "loanAmount": null, "excludeIncome":false, "fplIncome": null, "fplReduction": null, "capAtPercentPayment": false}
 	setPlan(o, "repayeUndergrad")
 })
 d3.selectAll(".repayeGrad").on("click", function(){
 	PREV_DATA = {}
 	if(d3.select(this).classed("buttonLink")){ scrollDown()}
-	var o = {"incomeExcluded":1.5, "percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":25,"capAtStandardRepayment":false, "loanAmount": null}
+	var o = {"percentFPL":1.5, "percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":25,"capAtStandardRepayment":false, "loanAmount": null, "excludeIncome":false, "fplIncome": null, "fplReduction": null, "capAtPercentPayment": false}
 	setPlan(o, "repayeGrad")
 })
 d3.selectAll(".repayePSLF").on("click", function(){
 	PREV_DATA = {}
 	if(d3.select(this).classed("buttonLink")){ scrollDown()}
-	var o = {"incomeExcluded":1.5, "percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":10,"capAtStandardRepayment":false, "loanAmount": null}
+	var o = {"percentFPL":1.5, "percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":10,"capAtStandardRepayment":false, "loanAmount": null, "excludeIncome":false, "fplIncome": null, "fplReduction": null, "capAtPercentPayment": false}
 	setPlan(o, "repayePSLF")
 })
 d3.selectAll(".prosper").on("click", function(){
 	PREV_DATA = {}
 	if(d3.select(this).classed("buttonLink")){ scrollDown()}
-	var o = {"incomeExcluded":1.5, "percentDiscretionaryAGI":.15, "minPayment":25, "forgivenessPeriod":50,"capAtStandardRepayment":true, "loanAmount": null}
+	var o = {"percentFPL":1.5, "percentDiscretionaryAGI":.15, "minPayment":25, "forgivenessPeriod":50,"capAtStandardRepayment":true, "loanAmount": null, "excludeIncome":false, "fplIncome": null, "fplReduction": null, "capAtPercentPayment": false}
 	setPlan(o, "prosper")
 })
 d3.selectAll(".aimHigher").on("click", function(){
 	PREV_DATA = {}
 	if(d3.select(this).classed("buttonLink")){ scrollDown()}
-	var o = {"incomeExcluded":2.5, "percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":20,"capAtStandardRepayment":false, "loanAmount": null}
+	var o = {"percentFPL":2.5, "percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":20,"capAtStandardRepayment":false, "loanAmount": null, "excludeIncome":true, "fplIncome": 120000, "fplReduction": .05, "capAtPercentPayment": true}
 	setPlan(o, "aimHigher")
 })
 

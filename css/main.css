@@ -9,9 +9,14 @@ body{
     vertical-align: top;
 }
 .controlContainer.capAtStandardRepayment{
-    width: 308px;
+    width: 148px;
     margin-left: 10px;
 }
+.controlContainer.excludeIncome{
+    width: 150px;
+    margin-left: 22px;
+}
+
 #repaymentChart, #yearsChart{
 	float: left;
 	margin-bottom: 10px;
@@ -315,7 +320,11 @@ p{
 /********************************************************/
 /******************* CONTROLS ***************************/
 /********************************************************/
-
+.controlHeader{
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 7px;
+}
 #controls{
 	width: 1000px;
 	margin: 0 auto;
@@ -501,7 +510,7 @@ p{
     font-size: 14px;
     font-weight: bold;
     display: inline-block;
-    width: 280px;
+    width: 140px;
     top: -2px;
     position: relative;
 }
@@ -933,6 +942,7 @@ input.triangle[type=range]:focus::-ms-fill-upper {
   .controlContainer{
     width: calc(33% - 95px)
   }
+
   .button.repayeUndergrad{
     margin-left: 53px !important;
   }
