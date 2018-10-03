@@ -395,6 +395,7 @@ padding-top: 50px;
     font-weight: bold;
     position: relative;
     margin-bottom: 30px;
+    margin-top: 47px;
 }
 .chartSubtitle{
   font-size: 14px;
@@ -488,6 +489,12 @@ padding-top: 50px;
 }
 .controlContainer.percentLoan .valLabel{
   width: 36px;
+}
+.controlContainer.percentLoan{
+  position: relative;
+    left: -33px;
+    top: -4px;
+
 }
 
 .controlContainer.percentFPL input[type=number]{
@@ -1012,6 +1019,9 @@ input.triangle[type=range]:focus::-ms-fill-upper {
   #isMobile{
     display: block;
   }
+  .controlHeader{
+    text-align: center;
+  }
   .desktopCopy{
     display: none;
   }
@@ -1028,30 +1038,43 @@ input.triangle[type=range]:focus::-ms-fill-upper {
     margin-bottom: 10px;
   }
   .controlContainer{
-    width: calc(33% - 95px)
+    /*width: calc(33% - 95px)*/
+    width: 247px !important;
   }
-
+  .controlContainer.percentFPL{
+display: block;
+    margin: 0 auto;
+    height: 150px;
+    width: 190px !important;
+    margin-bottom: -22px;
+  }
+  .controlContainer.percentDiscretionaryAGI{
+    width: 201px !important;
+  }
   .button.repayeUndergrad{
     margin-left: 53px !important;
   }
-  .controlContainer.capAtStandardRepayment, #capLabel{
+  .controlContainer.capAtStandardRepayment{
     width: 220px;
   }
+  .controlContainer.capAtStandardRepayment{
+    display: block;
+    margin: 0 auto;
+    width: 204px !important;
+  }
+  .controlContainer.forgivenessPeriod{
+    width: 218px !important;
+  }
   .controlContainer .valLabel{
-    display: inline-block;
+/*    display: inline-block;
     padding-top: 15px !important;
     margin-left: 0px !important;
-    margin-top: 0px !important;
+    margin-top: 0px !important;*/
   }
   .prefix{
-    display: block;
-    float: left;
-    clear: left;
-    position: initial;
-    margin-top: 17px;
-    z-index: 1;
-    left: 7px !important;
+        z-index: 100;
   }
+
   .controlContainer.minPayment .valLabel {
       position: relative;
       z-index: 0;
@@ -1110,6 +1133,15 @@ input.triangle[type=range]:focus::-ms-fill-upper {
   #loanAmount2 {
     left: 146px;
   }
+  .bracket{
+    display: none;
+  }
+  .bracketMobile{
+    display: block;
+  }
+  .bracketMobile img{
+    width: 250px;
+  }
 
   #notes-container {
     width: 320px;
@@ -1157,6 +1189,41 @@ input.triangle[type=range]:focus::-ms-fill-upper {
     display: inline;
     float: none;
     margin-left: 10px !important;
+  }
+  .controlContainer{
+    margin: 0 auto !important;
+    display: block;
+    height: 120px;
+    left: 0px !important;
+    top: 0px !important;
+  }
+  .controlContainer.percentFPL{
+    height: 110px;
+  }
+  .controlContainer.excludeIncome{
+    height: 63px;
+  }
+  .controlContainer.fplIncome{
+    height: 80px;
+  }
+  .controlContainer.minPayment{
+    height: 90px;
+  }
+  .controlContainer.minPayment .prefix{
+    left: 7px;
+  }
+  .controlRow{
+        padding: 20px;
+    
+  }
+  .controlRow.grey{
+    background: #F7F7F7;
+  }
+  .controlRow.grey .valLabel{
+    background: #F7F7F7;
+  }
+  .controlRow.grey input[type=range]{
+    border: 1px solid #f7f7f7;
   }
 .controlContainer .valLabel {
     display: inline-block;
