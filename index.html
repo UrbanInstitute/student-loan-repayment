@@ -90,24 +90,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <div id = "topText">
 <div id = "topTitle">Charting Student Loan Repayment</div>
         <div id = "topHR"></div> 
-        <div class = "pubDate">February 14, 2018</div>
+        <div class = "pubDate">Updated October 4, 2018 to include the Aim Higher Act</div>
         <p>
-		To help make student loan repayment affordable, the US Department of Education offers several <a href = "https://studentaid.ed.gov/sa/repay-loans/understand/plans/income-driven" target = "_blank">repayment plans</a> that set monthly payments based on the borrower&rsquo;s income. These plans require borrowers to pay a portion of their discretionary income (earnings above 150 percent of the federal poverty level) for a given number of years, after which the remainder of the loan is forgiven. 
+		To help make student loan repayment affordable, the US Department of Education offers several <a href = "https://studentaid.ed.gov/sa/repay-loans/understand/plans/income-driven" target = "_blank">repayment plans</a> that set monthly payments based on the borrower&rsquo;s income. These plans require borrowers to pay a portion of their discretionary income (earnings above 150 percent of the federal poverty level) for a given number of years, after which the remainder of the loan is forgiven.
 		</p>
 		<p>
-		As Congress faces the task of reauthorizing the Higher Education Act, proposals to change these income-driven repayment plans abound. Introduced late last year, the House&rsquo;s <span class = "buttonLink prosper">PROSPER</span> (or Promoting Real Opportunity, Success, and Prosperity through Education Reform) Act suggested one <a href = "https://www.urban.org/urban-wire/prosper-act-changes-math-student-loan-borrowers" target = "_blank">new version of income-driven repayment</a>, and it&rsquo;s likely the Senate will suggest another. 
+		As Congress faces the task of reauthorizing the Higher Education Act, proposals to change these income-driven repayment plans abound. The House Republican&rsquo;s <span class = "buttonLink prosper">PROSPER</span> (or Promoting Real Opportunity, Success, and Prosperity through Education Reform) Act suggested one <a href = "https://www.urban.org/urban-wire/prosper-act-changes-math-student-loan-borrowers" target = "_blank">new version of income-driven repayment</a> and House Democrats have suggested a <a hre = "http://democrats-edworkforce.house.gov/imo/media/doc/Aim%20Higher%20Act%20Bill%20Text.pdf" target = "_blank">different version in their Aim Higher bill</a>. 
 		</p>
 		<p>
 		The parameters of a repayment plan&mdash;the percentage of income paid, the period of repayment, and requirements for minimum payments&mdash;can substantially affect how much borrowers pay toward their loans. This tool shows how these parameters will affect the amount borrowers will pay (in present dollars) and how long it will take for borrowers to pay off the loan.
 		</p>
 		<p>
-		You can build your own policy by changing parameters, or use the buttons to model existing repayment plans or proposals. By adjusting the loan amount, you can see what would be repaid (and for how long) for borrowers at different starting income levels.
+    You can build your own policy by changing parameters, or use the buttons to model existing repayment plans or proposals. By adjusting the loan amount, you can see what would be repaid (and for how long) for borrowers at different starting income levels.
 		</p>
 		<p>
 		<span class ="desktopCopy">The chart on the left</span><span class ="mobileCopy">The first chart</span> shows how much borrowers would repay based on their starting income. <span class ="desktopCopy">The chart to the right</span><span class ="mobileCopy">The second chart</span> models how long borrowers would be in repayment, again based on their income. We&rsquo;ve also calculated how much borrowers would repay under a standard 10-year plan to show how an income-driven plan compares with the standard repayment option.  
 		</p>
 		<p>
-		The Revised Pay As You Earn <span class = "buttonLink repayeUndergrad">(REPAYE) plan for undergraduates</span> requires borrowers pay 10 percent of their discretionary income, with the remainder of the loan forgiven after 20 years. Because the loans continue to accrue interest, it is possible that some borrowers will pay more than they would have under a standard 10-year plan. Borrowers who make less than 150 percent of the poverty level pay nothing ($0) on their loans. Dependent undergraduate students can borrow a maximum of $31,000 in federal student loans. 
+		The Revised Pay As You Earn <span class = "buttonLink repayeUndergrad">(REPAYE) plan for undergraduates</span> requires borrowers pay 10 percent of their discretionary income, with the remainder of the loan forgiven after 20 years. Because the loans continue to accrue interest, it is possible that some borrowers will pay more than they would have under a standard 10-year plan. Borrowers who make less than 150 percent of the federal poverty level pay nothing ($0) on their loans. Dependent undergraduate students can borrow a maximum of $31,000 in federal student loans.
 		</p>
 		<p>
 		<span class = "buttonLink repayeGrad">REPAYE for graduate students</span> is the same as REPAYE for undergraduates, 
@@ -118,6 +118,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 		</p>
     <p>
     The House&rsquo;s PROSPER plan would require students to pay 15 percent of their discretionary income. Borrowers would have to make a minimum monthly payment of $25 dollars (which can be reduced to $5 due to severe economic hardship). And there is no loan forgiveness, but payments end when borrowers have paid what they would have under a standard 10-year plan, meaning that borrowers do not pay for additional accrued interest. The lack of a loan forgiveness period means that some borrowers might be paying off their loans for the entirety of their careers.
+    </p>
+    <p>
+    House Democrat&rsquo;s <span class = "buttonLink aimHigher">Aim Higher plan</span> would require students to pay 10 percent of their discretionary income. The plan would also redefine discretionary income as income earned above 250 percent of the federal poverty level, meaning that more borrowers would be eligible for $0 payments. However, for every $1,000 earned above $120,000, this 250 percent discretionary income threshold is reduced by 5 percent. Aim Higher would cap payments after 20 years or after the borrower has paid an amount equal to 150 percent of the principal loan amount.
     </p>
 		<div id = "clickToExpand" class = "closed">Click to Read More</div>
 		<svg id = "gradientHolder"></svg>
@@ -138,64 +141,73 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     	<div id = "sliders">
 
       <div id = "monthlyContainer" class = "controlRow">
-        <div class = "controlHeader">What's the monthly payment?</div>
+        <div class = "controlHeader">Define discretionary income</div>
+
+        <div class = "controlContainer percentFPL">
+          <div class = "label">Exempt income up to</div>
+          <input id = "percentFPL" class = "controlSlider" type="range" min="0" max="3" step="0.1" value ="1.5">
+          <!-- <div class = "valLabel">10%</div> -->
+          <input type = "number" class = "valLabel" value ="150" min ="0" max="300"><span class = "suffix">%</span>
+          <div class = "bottomLable">above federal poverty level</div>
+        </div>
+
+
+        <div class = "controlContainer excludeIncome">
+          <label for="excludeIncome"></label><div id = "capLabel">Reduce exemption percentage for high incomes</div>
+          <div class = "switch off" id="excludeIncome" ></div>
+        </div>
+
+        <div class = "bracket"><img src = "images/bracket.png"></div>
+        <div class = "bracketMobile"><img src = "images/bracketMobile.png"></div>
+
+        <div class = "controlContainer fplIncome">
+          <div class = "label">Define high income as those over</div>
+          <input id = "fplIncome" class = "controlSlider" type="range" min="80000" max="140000" step="1000" value ="120000">
+          <!-- <div class = "valLabel">10%</div> -->
+          <span class = "prefix">$</span><input type = "number" class = "valLabel fplIncome" value ="120" min ="80" max="140"><span class = "suffix">k</span>
+        </div>
+
+        <div class = "controlContainer fplReduction">
+          <div class = "label">Reduce exemption by</div>
+          <input id = "fplReduction" class = "controlSlider" type="range" min=".01" max=".1" step=".01" value =".05">
+          <!-- <div class = "valLabel">10%</div> -->
+          <input type = "number" class = "valLabel fplReduction" value ="5" min ="1" max="10"><span class = "suffix">%</span>
+          <div class = "bottomLable">per $1,000 in income</div>
+        </div>
+      </div>
+
+
+      <div id = "monthlyContainer" class = "controlRow">
+        <div class = "controlHeader">Define monthly payment</div>
 
         <div class = "controlContainer percentDiscretionaryAGI">
-          <div class = "label">Percent of discretionary income borrower pays</div>
+          <div class = "label">Define payment as</div>
           <input id = "percentDiscretionaryAGI" class = "controlSlider" type="range" min="0" max="1" step="0.01" value =".1">
           <!-- <div class = "valLabel">10%</div> -->
           <input type = "number" class = "valLabel" value ="10" min ="0" max="100"><span class = "suffix">%</span>
+          <div class = "bottomLable">of discretionary income</div>
         </div>
 
         <div class = "controlContainer minPayment">
-          <div class = "label">Minimum monthly payment</div>
+          <div class = "label">Set minimum monthly payment</div>
           <input id = "minPayment" class = "controlSlider" type="range" min="0" max="100" step="1" value ="0">
           <span class = "prefix">$</span><input type = "number" class = "valLabel" value ="0" min ="0" max="100">
         </div>
       </div>
 
-      <div id = "monthlyContainer" class = "controlRow">
-        <div class = "controlHeader">What is the base income?</div>
 
-        <div class = "controlContainer percentFPL">
-          <div class = "label">Discretionary income cutoff</div>
-          <input id = "percentFPL" class = "controlSlider" type="range" min="0" max="3" step="0.1" value ="1.5">
-          <!-- <div class = "valLabel">10%</div> -->
-          <input type = "number" class = "valLabel" value ="150" min ="0" max="300"><span class = "suffix">%</span>
-        </div>
-
-
-        <div class = "controlContainer excludeIncome">
-          <label for="excludeIncome"></label><div id = "capLabel">Reduce discretionary income cutoff based on income</div>
-          <div class = "switch off" id="excludeIncome" ></div>
-        </div>
-
-        <div class = "controlContainer fplIncome">
-          <div class = "label">For income over</div>
-          <input id = "fplIncome" class = "controlSlider" type="range" min="80000" max="140000" step="1000" value ="120000">
-          <!-- <div class = "valLabel">10%</div> -->
-          <span class = "prefix">$</span><input type = "number" class = "valLabel fplIncome" value ="120000" min ="80000" max="140000">
-        </div>
-
-        <div class = "controlContainer fplReduction">
-          <div class = "label">Reduce by</div>
-          <input id = "fplReduction" class = "controlSlider" type="range" min=".01" max=".1" step=".01" value =".05">
-          <!-- <div class = "valLabel">10%</div> -->
-          <input type = "number" class = "valLabel fplReduction" value ="5" min ="1" max="10"><span class = "suffix long">% per $1,000 in income</span>
-        </div>
-      </div>
 
 			<div id = "monthlyContainer" class = "controlRow">
-        <div class = "controlHeader">When do payments stop?</div>
+        <div class = "controlHeader">Define when payments stop</div>
 
         <div class = "controlContainer capAtStandardRepayment">
         <!-- <input type="checkbox" id="capAtStandardRepayment" value="cap"> -->
-          <label for="capAtStandardRepayment"></label><div id = "capLabel">Limit total amount paid to amount repaid under 10-year plan</div>
+          <label for="capAtStandardRepayment"></label><div id = "capLabel2">Limit total amount paid to amount repaid under 10-year plan</div>
           <div class = "switch off" id="capAtStandardRepayment" ></div>
         </div>
 
         <div class = "controlContainer forgivenessPeriod">
-          <div class = "label">Forgiveness period</div>
+          <div class = "label">Set forgiveness period</div>
             <input id = "forgivenessPeriod" class = "controlSlider" type="range" min="0" max="50" step="1" value ="20">
             <input id = "forgivenessPeriodLabel" type = "number" class = "valLabel" value = "20" min = "0" max = "50"><span class = "suffix years">years</span>
             <div id = "noForgiveness">No forgiveness period</div>
@@ -203,15 +215,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         <div class = "controlContainer capAtPercentPayment">
         <!-- <input type="checkbox" id="capAtStandardRepayment" value="cap"> -->
-          <label for="capAtPercentPayment"></label><div id = "capLabel">Limit total interest to percent of initial loan</div>
+          <label for="capAtPercentPayment"></label><div id = "capLabel2">Limit total amount paid to percentage above principal amount</div>
           <div class = "switch off" id="capAtPercentPayment" ></div>
         </div>
 
+        <div class = "bracket payments"><img src = "images/bracket.png"></div>
+        <div class = "bracketMobile"><img src = "images/bracketMobile.png"></div>
+
         <div class = "controlContainer percentLoan">
-          <div class = "label">Percent initial loan</div>
+          <div class = "label">Limit total paid to
+</div>
           <input id = "percentLoan" class = "controlSlider" type="range" min="0" max="1" step="0.1" value =".5">
           <!-- <div class = "valLabel">10%</div> -->
           <input type = "number" class = "valLabel percentLoan" value ="50" min ="0" max="100"><span class = "suffix">%</span>
+          <div class = "bottomLable">above principal amount</div>
         </div>
 
 

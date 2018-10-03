@@ -88,21 +88,6 @@ function getNPV(agi, year, opts){
 	var prevBalance = (year == 0) ? loanAmount : PREV_DATA[agi]["balance"][year - 1];
 	var balance = prevBalance * (1+(opts.interestRate)) - incPay
 
-	// PREV_BALANCE = balance;
-
-//  k = incpay
-//  m = yrpayment
-// IF((SUM($K$3:K12)>=$S$10 && SUM($M$3:M11)<$S$10){
-// 	,$S$10-SUM($M$3:M11),
-// }
-// else{
-// 	IF((SUM($K$3:K11)>=$S$10 && SUM($M$3:M11)>=$S$10){
-// 		0
-// 	}
-// 	else{
-// 		K12
-// 	}
-// }
 
 	var yearlyPayment, yearlyUnbounded;
 	if((opts.capAtStandardRepayment && year != 0) || (opts.capAtPercentPayment && year != 0)){
@@ -121,7 +106,9 @@ function getNPV(agi, year, opts){
 		var totalRepayment = opts.standardRepayment*opts.standardYears
 		var percentLoanCap = loanAmount*(1+opts.percentLoan)
 
-		var cap = (opts.capAtStandardRepayment) ? totalRepayment : percentLoanCap
+		// console.log(totalRepayment, percentLoanCap)
+
+		var cap = (opts.capAtStandardRepayment) ? totalRepayment : totalRepayment
 		if(sumInc >= cap && sumPay < cap){
 			yearlyPayment = cap - sumPay
 		}else{
@@ -675,6 +662,7 @@ function disableFpl(){
 	d3.select("#fplIncome").classed("disabled", true)
 	d3.select(".controlContainer.fplIncome .valLabel").classed("disabled", true)
 	d3.select(".controlContainer.fplIncome .prefix").classed("disabled", true)
+	d3.select(".controlContainer.fplIncome .suffix").classed("disabled", true)
 
 	d3.select("#fplReduction").classed("disabled", true)
 	d3.select(".controlContainer.fplReduction .valLabel").classed("disabled", true)
@@ -683,7 +671,7 @@ function disableFpl(){
 
 	var fi = (typeof(d3.select("#fplIncome").datum()) == "undefined") ? 120000 : d3.select("#fplIncome").datum()
 	$("#fplIncome").val(fi)
-	$(".valLabel.fplIncome").val(fi)
+	$(".valLabel.fplIncome").val(fi/1000)
 
 	var fr = (typeof(d3.select("#fplReduction").datum()) == "undefined") ? .05 : d3.select("#fplReduction").datum()
 	$("#fplReduction").val(fr)
@@ -692,6 +680,7 @@ function disableFpl(){
 function enableFpl(years){
 	d3.select("#fplIncome").classed("disabled", false)
 	d3.select(".controlContainer.fplIncome .valLabel").classed("disabled", false)
+	d3.select(".controlContainer.fplIncome .prefix").classed("disabled", false)
 	d3.select(".controlContainer.fplIncome .suffix").classed("disabled", false)
 
 	d3.select("#fplReduction").classed("disabled", false)
@@ -703,7 +692,7 @@ function enableFpl(years){
 function disablePercentPayment(){
 	d3.select("#percentLoan").classed("disabled", true)
 	d3.select(".controlContainer.percentLoan .valLabel").classed("disabled", true)
-	d3.select(".controlContainer.percentLoan .prefix").classed("disabled", true)
+	d3.select(".controlContainer.percentLoan .suffix").classed("disabled", true)
 
 	var pl = (typeof(d3.select("#percentLoan").datum()) == "undefined") ? .5 : d3.select("#percentLoan").datum()
 	$("#percentLoan").val(pl)
@@ -721,6 +710,7 @@ function setPlan(o, id){
 	for(var i =0; i < elems.length; i++){
 		var el = elems[i]
 		var mult = (el == "percentDiscretionaryAGI" || el == "percentFPL" || el == "fplReduction" || el == "percentLoan") ? 100 : 1;
+		if(el == "fplIncome"){ mult = 1/1000}
 		if(el == "fplReduction" || el == "fplIncome" || el == "percentLoan"){
 			d3.select("#" + el).datum(o[el])
 		}
@@ -740,6 +730,12 @@ function setPlan(o, id){
 				if (val >= 100) { $(".controlContainer." + el).find(".valLabel").css("width","41px") }
 				else if(val >= 10){ $(".controlContainer." + el).find(".valLabel").css("width","34px") }
 				else{ $(".controlContainer." + el).find(".valLabel").css("width","24px") }	
+			}
+			else if(el == "fplIncome"){
+				if (val >= 100000) { $(".controlContainer." + el).find(".valLabel").css("width","53px") }
+				else if(val >= 10000){ $(".controlContainer." + el).find(".valLabel").css("width","46px") }
+				else{ $(".controlContainer." + el).find(".valLabel").css("width","36px") }	
+
 			}
 			$(".controlContainer." + el).find(".valLabel").val(parseInt(val*mult))
 			$(".controlContainer." + el).find(".controlSlider").val(val)
@@ -801,7 +797,7 @@ var sliderEvent = isIE() ? "change" : "input"
 d3.selectAll("#percentFPL").on(sliderEvent, function(){
 	PREV_DATA = {}
 	var val = $(this).val()
-	if (val >= 1) { $(this.parentNode).find(".valLabel").css("width","43px") }
+	if (val >= 1) { $(this.parentNode).find(".valLabel").css("width","45px") }
 	else if(val >= .1){ $(this.parentNode).find(".valLabel").css("width","36px") }
 	else{ $(this.parentNode).find(".valLabel").css("width","26px") }
 	$(this.parentNode).find(".valLabel").val(parseInt(val*100))
@@ -812,7 +808,7 @@ d3.selectAll(".controlContainer.percentFPL .valLabel").on("input", function(){
 	var val = parseInt($(this).val()),
 		max = parseInt($(this).attr("max")),
 		min = parseInt($(this).attr("min"))
-	if (val >= 100) { $(this.parentNode).find(".valLabel").css("width","43px") }
+	if (val >= 100) { $(this.parentNode).find(".valLabel").css("width","45px") }
 	else if(val >= 10){ $(this.parentNode).find(".valLabel").css("width","36px") }
 	else{ $(this.parentNode).find(".valLabel").css("width","26px") }
 
@@ -828,12 +824,12 @@ d3.selectAll("#fplIncome").on(sliderEvent, function(){
 	var val = $(this).val()
 	if( ! d3.select("#fplIncome").classed("disabled") ){
 		d3.select("#fplIncome").datum(val)
-		if (val >= 1) { $(this.parentNode).find(".valLabel").css("width","43px") }
-		else if(val >= .1){ $(this.parentNode).find(".valLabel").css("width","36px") }
-		else{ $(this.parentNode).find(".valLabel").css("width","26px") }
+		if (val >= 100000) { $(this.parentNode).find(".valLabel").css("width","53px") }
+		else if(val >= 10000){ $(this.parentNode).find(".valLabel").css("width","46px") }
+		else{ $(this.parentNode).find(".valLabel").css("width","36px") }
 	}
 
-	$(this.parentNode).find(".valLabel").val(parseInt(val*100))
+	$(this.parentNode).find(".valLabel").val(parseInt(val/1000))
 	updateCharts()
 })
 d3.selectAll(".controlContainer.fplIncome .valLabel").on("input", function(){
@@ -843,15 +839,15 @@ d3.selectAll(".controlContainer.fplIncome .valLabel").on("input", function(){
 		min = parseInt($(this).attr("min"))
 	if( ! d3.select("#fplIncome").classed("disabled") ){
 		d3.select("#fplIncome").datum(val)
-		if (val >= 100) { $(this.parentNode).find(".valLabel").css("width","43px") }
-		else if(val >= 10){ $(this.parentNode).find(".valLabel").css("width","36px") }
-		else{ $(this.parentNode).find(".valLabel").css("width","26px") }
+		if (val >= 100) { $(this.parentNode).find(".valLabel").css("width","53px") }
+		else if(val >= 10){ $(this.parentNode).find(".valLabel").css("width","46px") }
+		else{ $(this.parentNode).find(".valLabel").css("width","36px") }
 
 		if(val > max){ val = max }
 		if(val < min){ val = min }
 	}
 	$(this).val(val)
-	$(this.parentNode).find(".controlSlider").val(parseFloat(val/100.0))
+	$(this.parentNode).find(".controlSlider").val(parseFloat(val*1000))
 	updateCharts()
 })
 
