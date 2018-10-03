@@ -108,7 +108,7 @@ function getNPV(agi, year, opts){
 
 		// console.log(totalRepayment, percentLoanCap)
 
-		var cap = (opts.capAtStandardRepayment) ? totalRepayment : totalRepayment
+		var cap = (opts.capAtStandardRepayment) ? totalRepayment : percentLoanCap
 		if(sumInc >= cap && sumPay < cap){
 			yearlyPayment = cap - sumPay
 		}else{
