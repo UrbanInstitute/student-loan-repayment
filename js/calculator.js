@@ -83,14 +83,13 @@ function getNPV(agi, year, opts){
 		incPay = minAnnualPayment;
 	}else{
 			incPay = inc;
-		// }
 	}
 	var prevBalance = (year == 0) ? loanAmount : PREV_DATA[agi]["balance"][year - 1];
 	var balance = prevBalance * (1+(opts.interestRate)) - incPay
 
 
 	var yearlyPayment, yearlyUnbounded;
-	if((opts.capAtStandardRepayment && year != 0) || (opts.capAtPercentPayment && year != 0)){
+	if((opts.capAtStandardRepayment && year != 0) || (opts.capAtPercentPayment )){
 	// if(false){
 		var sumInc = incPay;
 		for(var i = 0; i < year; i++){
@@ -111,8 +110,8 @@ function getNPV(agi, year, opts){
 		var cap = (opts.capAtStandardRepayment) ? totalRepayment : percentLoanCap
 
 		if(opts.capAtPercentPayment){
-			yearlyUnbounded = (balance > 0) ? incPay : inc + balance;
-			if(yearlyUnbounded < 0){
+			yearlyUnbounded = (balance > 0) ? incPay : incPay + balance;
+			if(yearlyUnbounded  < 0){
 				yearlyPayment = 0;
 			}else{
 				if(sumInc >= cap && sumPay < cap){
