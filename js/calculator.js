@@ -109,15 +109,37 @@ function getNPV(agi, year, opts){
 		// console.log(totalRepayment, percentLoanCap)
 
 		var cap = (opts.capAtStandardRepayment) ? totalRepayment : percentLoanCap
-		if(sumInc >= cap && sumPay < cap){
-			yearlyPayment = cap - sumPay
-		}else{
-			if(sumInc >= cap && sumPay >= cap){
-				yearlyPayment = 0
+
+		if(opts.capAtPercentPayment){
+			yearlyUnbounded = (balance > 0) ? incPay : inc + balance;
+			if(yearlyUnbounded < 0){
+				yearlyPayment = 0;
 			}else{
-				yearlyPayment = incPay
+				if(sumInc >= cap && sumPay < cap){
+					yearlyPayment = cap - sumPay
+				}else{
+					if(sumInc >= cap && sumPay >= cap){
+						yearlyPayment = 0
+					}else{
+						yearlyPayment = incPay
+					}
+				}
+
+			}
+		}else{
+
+
+			if(sumInc >= cap && sumPay < cap){
+				yearlyPayment = cap - sumPay
+			}else{
+				if(sumInc >= cap && sumPay >= cap){
+					yearlyPayment = 0
+				}else{
+					yearlyPayment = incPay
+				}
 			}
 		}
+		// console.log(yearlyPayment, agi)
 
 		// console.log(sumInc)
 	}else{
@@ -1092,7 +1114,7 @@ d3.select("#clickToExpand").on("click", function(){
 	var full_height = $("#topText")[0].scrollHeight
 	if(d3.select(this).classed("closed")){
 		d3.select(this).classed("closed", false)
-			.text("Click to Hide")
+			.text("Click to hide")
 		d3.select("#topText")
 			.transition()
 			.style("height", full_height + "px")
