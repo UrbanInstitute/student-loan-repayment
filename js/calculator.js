@@ -89,11 +89,10 @@ function getNPV(agi, year, opts){
 
 
 	var yearlyPayment, yearlyUnbounded;
-	if((opts.capAtStandardRepayment && year != 0) || (opts.capAtPercentPayment )){
+	if((opts.capAtStandardRepayment && year != 0) || (opts.capAtPercentPayment && year != 0)){
 	// if(false){
 		var sumInc = incPay;
 		for(var i = 0; i < year; i++){
-		// 	console.log(i, year)
 			sumInc += PREV_DATA[agi]["incPay"][i]
 		}
 		var sumPay = 0;
@@ -111,20 +110,33 @@ function getNPV(agi, year, opts){
 
 		if(opts.capAtPercentPayment){
 			yearlyUnbounded = (balance > 0) ? incPay : incPay + balance;
-			if(yearlyUnbounded  < 0){
-				yearlyPayment = 0;
-			}else{
-				if(sumInc >= cap && sumPay < cap){
-					yearlyPayment = cap - sumPay
-				}else{
-					if(sumInc >= cap && sumPay >= cap){
-						yearlyPayment = 0
-					}else{
-						yearlyPayment = incPay
-					}
-				}
-
+			if(sumPay >= cap){
+				yearlyPayment = 0
 			}
+			else{
+				if(sumPay + inc >cap && prevBalance > 0){
+					yearlyPayment = Math.min(cap - sumPay, prevBalance)
+				}else{
+					var temp = (balance > 0) ? incPay : incPay + balance
+					yearlyPayment = Math.max(temp, 0)
+				}
+			}
+			
+			// else if(yearlyUnbounded  < 0){
+				
+			// 	yearlyPayment = 0;
+			// }else{
+			// 	if(sumInc >= cap && sumPay < cap){
+			// 		yearlyPayment = cap - sumPay
+			// 	}else{
+			// 		if(sumInc >= cap && sumPay >= cap){
+			// 			yearlyPayment = 0
+			// 		}else{
+			// 			yearlyPayment = incPay
+			// 		}
+			// 	}
+
+			// }
 		}else{
 
 
@@ -1100,7 +1112,7 @@ d3.selectAll(".prosper").on("click", function(){
 d3.selectAll(".aimHigher").on("click", function(){
 	PREV_DATA = {}
 	if(d3.select(this).classed("buttonLink")){ scrollDown()}
-	var o = {"percentFPL":2.5, "percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":20,"capAtStandardRepayment":false, "loanAmount": null, "excludeIncome":true, "fplIncome": 120000, "fplReduction": .05, "capAtPercentPayment": true}
+	var o = {"percentFPL":2.5, "percentDiscretionaryAGI":.1, "minPayment":0, "forgivenessPeriod":20,"capAtStandardRepayment":false, "loanAmount": null, "excludeIncome":true, "fplIncome": 120000, "fplReduction": .05, "capAtPercentPayment": true, "percentLoan": .5}
 	setPlan(o, "aimHigher")
 })
 
@@ -1122,7 +1134,7 @@ d3.select("#clickToExpand").on("click", function(){
 			.style("opacity",0)
 	}else{
 		d3.select(this).classed("closed", true)
-			.text("Click to Read More")
+			.text("Click to read more")
 		d3.select("#topText")
 			.transition()
 			.style("height", "400px")
