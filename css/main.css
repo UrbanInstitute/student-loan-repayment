@@ -255,8 +255,8 @@ p{
 
 .controlRow{
   border-bottom: 1.5px solid #D2D2D2;
-padding-top: 50px;
-    padding-bottom: 20px;
+padding-top: 25px;
+    padding-bottom: 0px;
 }
 }
 /********************************************************/
@@ -340,7 +340,7 @@ padding-top: 50px;
 .controlHeader{
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 }
 #controls{
 	width: 1000px;
@@ -358,7 +358,7 @@ padding-top: 50px;
   width: 100%;
   /*margin-bottom: 80px;*/
   border-bottom: 1.5px solid #D2D2D2;
-  padding-bottom: 100px;
+  padding-bottom: 50px;
 }
 #buttons .button{
   display: inline-block;
@@ -596,9 +596,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .bottomLable{
-      color: #696969;
+      color: #000;
     font-size: 14px;
-    font-style: italic;
     margin-left: 2px;
     margin-top: 8px;
 
@@ -1213,7 +1212,7 @@ display: block;
     left: 7px;
   }
   .controlRow{
-        padding: 20px;
+        padding-top: 20px;
     
   }
   .controlRow.grey{

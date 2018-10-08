@@ -122,21 +122,6 @@ function getNPV(agi, year, opts){
 				}
 			}
 			
-			// else if(yearlyUnbounded  < 0){
-				
-			// 	yearlyPayment = 0;
-			// }else{
-			// 	if(sumInc >= cap && sumPay < cap){
-			// 		yearlyPayment = cap - sumPay
-			// 	}else{
-			// 		if(sumInc >= cap && sumPay >= cap){
-			// 			yearlyPayment = 0
-			// 		}else{
-			// 			yearlyPayment = incPay
-			// 		}
-			// 	}
-
-			// }
 		}else{
 
 
